@@ -79,6 +79,19 @@ body {
     font-weight: 600;
 }
 
+.external-link {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white !important;
+    font-weight: 600;
+}
+
+.external-link:hover {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
 .tutorial-link:hover {
     background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
     transform: translateY(-1px);
@@ -164,6 +177,62 @@ body {
     display: flex;
     border-bottom: 1px solid #e2e8f0;
     margin-bottom: 1.5rem;
+}
+
+/* Teams Selector */
+.teams-selector {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+}
+
+.teams-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.team-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+}
+
+.team-checkbox-item:hover {
+    background: #e2e8f0;
+}
+
+.team-checkbox-item input[type="checkbox"] {
+    margin: 0;
+}
+
+.team-checkbox-info {
+    flex: 1;
+}
+
+.team-checkbox-name {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.team-checkbox-desc {
+    font-size: 0.875rem;
+    color: #718096;
+    margin-top: 0.25rem;
+}
+
+.form-help {
+    font-size: 0.875rem;
+    color: #718096;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    font-style: italic;
 }
 
 .member-controls {
@@ -1001,6 +1070,16 @@ body {
     color: var(--primary-color);
 }
 
+.dark-mode .external-link {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white !important;
+}
+
+.dark-mode .external-link:hover {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+    color: white !important;
+}
+
 .dark-mode .container,
 .dark-mode .modal-content {
     background: var(--surface-color);
@@ -1016,6 +1095,24 @@ body {
     background: var(--bg-color);
     border-color: var(--border-color);
     color: var(--text-color);
+}
+
+.dark-mode .teams-selector {
+    background: var(--bg-color);
+    border-color: var(--border-color);
+}
+
+.dark-mode .team-checkbox-item:hover {
+    background: var(--surface-color);
+}
+
+.dark-mode .team-checkbox-name {
+    color: var(--text-color);
+}
+
+.dark-mode .team-checkbox-desc,
+.dark-mode .form-help {
+    color: var(--text-muted);
 }
 
 .dark-mode input,

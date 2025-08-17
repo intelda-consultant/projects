@@ -128,9 +128,11 @@ class PromptVCS {
     openRepoModal(repo = null) {
         const modal = document.getElementById('repoModal');
         const form = document.getElementById('repoForm');
+        const submitBtn = document.getElementById('submitRepoBtn');
         
         if (repo) {
             document.getElementById('repoModalTitle').textContent = 'Edit Repository';
+            submitBtn.textContent = 'Update Repository';
             document.getElementById('repoName').value = repo.name;
             document.getElementById('repoDescription').value = repo.description;
             document.getElementById('initialPrompt').value = repo.versions[0]?.content || '';
@@ -138,11 +140,47 @@ class PromptVCS {
             form.dataset.editId = repo.id;
         } else {
             document.getElementById('repoModalTitle').textContent = 'Create New Repository';
+            submitBtn.textContent = 'Create Repository';
             form.reset();
             delete form.dataset.editId;
         }
         
+        this.populateRepoTeamsList(repo);
         this.showModal('repoModal');
+    }
+
+    populateRepoTeamsList(repo = null) {
+        const container = document.getElementById('availableTeamsList');
+        
+        if (this.teams.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>No teams available. Create a team first to assign to repositories.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Get currently assigned team IDs for this repository
+        const assignedTeamIds = repo ? this.teams
+            .filter(team => team.repositories.some(r => r.id === repo.id))
+            .map(team => team.id) : [];
+
+        container.innerHTML = this.teams.map(team => `
+            <div class="team-checkbox-item">
+                <input type="checkbox" 
+                       id="team_${team.id}" 
+                       value="${team.id}"
+                       ${assignedTeamIds.includes(team.id) ? 'checked' : ''}>
+                <div class="team-checkbox-info">
+                    <div class="team-checkbox-name">${team.name}</div>
+                    <div class="team-checkbox-desc">
+                        ${team.description || 'No description'} • ${team.members.length} members
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
 
     handleRepoSubmit(e) {
@@ -185,11 +223,42 @@ class PromptVCS {
             this.repositories.push(repo);
         }
 
+        // Handle team assignments
+        this.updateRepoTeamAssignments(repo);
+
         this.saveData();
         this.renderRepositories();
+        this.renderTeams();
         this.updateStats();
         this.addActivity(`${form.dataset.editId ? 'Updated' : 'Created'} repository "${repo.name}"`);
         this.closeModal('repoModal');
+    }
+
+    updateRepoTeamAssignments(repo) {
+        // Get selected team IDs from checkboxes
+        const selectedTeamIds = Array.from(document.querySelectorAll('#availableTeamsList input[type="checkbox"]:checked'))
+            .map(checkbox => checkbox.value);
+
+        // Remove this repository from all teams first
+        this.teams.forEach(team => {
+            team.repositories = team.repositories.filter(r => r.id !== repo.id);
+        });
+
+        // Add repository to selected teams
+        selectedTeamIds.forEach(teamId => {
+            const team = this.teams.find(t => t.id === teamId);
+            if (team) {
+                team.repositories.push({
+                    id: repo.id,
+                    name: repo.name,
+                    description: repo.description,
+                    addedAt: new Date().toISOString(),
+                    versions: repo.versions,
+                    collaborators: repo.collaborators
+                });
+                team.updatedAt = new Date().toISOString();
+            }
+        });
     }
 
     deleteRepository(id) {
@@ -1018,7 +1087,9 @@ class PromptVCS {
                     </div>
                 </div>
                 <div class="team-actions">
-                    <button class="btn btn-primary">Manage</button>
+                    <button class="btn btn-primary" onclick="promptVCS.openTeamDetails('${team.id}')">
+                        <i class="fas fa-cog"></i> Manage
+                    </button>
                 </div>
             </div>
         `).join('');
@@ -1312,10 +1383,39 @@ if (promptVCS.repositories.length === 0) {
             };
 
             promptVCS.repositories.push(demoRepo);
+            
+            // Also create a demo team
+            const demoTeam = {
+                id: promptVCS.generateId(),
+                name: 'A-Team',
+                description: 'Main development team for AI prompt engineering',
+                private: false,
+                members: [
+                    { email: 'you@example.com', role: 'admin', joinedAt: new Date(Date.now() - 86400000 * 5).toISOString() },
+                    { email: 'alice@example.com', role: 'member', joinedAt: new Date(Date.now() - 86400000 * 3).toISOString() },
+                    { email: 'bob@example.com', role: 'member', joinedAt: new Date(Date.now() - 86400000 * 2).toISOString() }
+                ],
+                repositories: [
+                    {
+                        id: demoRepo.id,
+                        name: demoRepo.name,
+                        description: demoRepo.description,
+                        addedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+                        versions: demoRepo.versions,
+                        collaborators: demoRepo.collaborators
+                    }
+                ],
+                createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+                updatedAt: new Date(Date.now() - 86400000).toISOString()
+            };
+            
+            promptVCS.teams.push(demoTeam);
             promptVCS.saveData();
             promptVCS.renderRepositories();
+            promptVCS.renderTeams();
             promptVCS.updateStats();
             promptVCS.addActivity('Demo repository created', 'star');
+            promptVCS.addActivity('Demo team created', 'users');
         }
     }, 2000);
 }
