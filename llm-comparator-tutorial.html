@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Response Comparator - Tutorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#8B5CF6',
+          },
+        },
+      },
+    }
+    
+    // Check for dark mode preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+  <style>
+    .step-number {
+      background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    }
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <!-- Navigation -->
+  <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+            LLM Response Comparator Tutorial
+          </h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="llm-comparator.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+            Try the App
+          </a>
+          <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
+            🌙
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-primary to-secondary text-white py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">
+        Master AI Model Comparison
+      </h1>
+      <p class="text-xl mb-8 opacity-90">
+        Learn how to compare AI models side-by-side to find the perfect fit for your needs
+      </p>
+      <a href="#getting-started" class="bg-white text-primary px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+        Get Started
+      </a>
+    </div>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Table of Contents</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <a href="#getting-started" class="block text-primary hover:text-primary/80 font-medium">1. Getting Started</a>
+          <a href="#setup" class="block text-primary hover:text-primary/80 font-medium">2. Initial Setup</a>
+          <a href="#model-selection" class="block text-primary hover:text-primary/80 font-medium">3. Model Selection</a>
+          <a href="#running-comparisons" class="block text-primary hover:text-primary/80 font-medium">4. Running Comparisons</a>
+        </div>
+        <div class="space-y-2">
+          <a href="#analyzing-results" class="block text-primary hover:text-primary/80 font-medium">5. Analyzing Results</a>
+          <a href="#history-management" class="block text-primary hover:text-primary/80 font-medium">6. History Management</a>
+          <a href="#best-practices" class="block text-primary hover:text-primary/80 font-medium">7. Best Practices</a>
+          <a href="#troubleshooting" class="block text-primary hover:text-primary/80 font-medium">8. Troubleshooting</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tutorial Sections -->
+    
+    <!-- Section 1: Getting Started -->
+    <section id="getting-started" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">1</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Getting Started</h2>
+        </div>
+        
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          The LLM Response Comparator allows you to test the same prompt across multiple AI models simultaneously, 
+          helping you make informed decisions about which model works best for your specific use case.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Why Compare Models?</h3>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">✓</span>
+                Find the best model for your specific task
+              </li>
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">✓</span>
+                Compare response quality and style
+              </li>
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">✓</span>
+                Analyze performance and speed
+              </li>
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">✓</span>
+                Optimize costs for your workflow
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">What You'll Learn</h3>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">•</span>
+                How to set up and configure the comparator
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">•</span>
+                Understanding different AI model strengths
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">•</span>
+                Interpreting comparison results
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">•</span>
+                Making data-driven model choices
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 bg-blue-50 dark:bg-blue-900/50 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+          <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-3">Available Models:</h4>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-orange-500"></div>
+              <span class="text-blue-700 dark:text-blue-300">Claude 3 Series</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="text-blue-700 dark:text-blue-300">GPT-4o Series</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+              <span class="text-blue-700 dark:text-blue-300">Gemini 1.5 Pro</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+              <span class="text-blue-700 dark:text-blue-300">Mistral Large</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Setup -->
+    <section id="setup" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">2</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Initial Setup</h2>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Getting Your OpenRouter API Key</h3>
+          <div class="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
+            <p class="text-green-800 dark:text-green-200">
+              <strong>One API, Multiple Models:</strong> OpenRouter gives you access to all major AI models 
+              through a single API key, making comparisons seamless and cost-effective.
+            </p>
+          </div>
+          
+          <ol class="space-y-4 text-gray-600 dark:text-gray-300">
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">1.</span>
+              <div>
+                Visit <a href="https://openrouter.ai" target="_blank" class="text-primary hover:underline">openrouter.ai</a> 
+                and create a free account
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">2.</span>
+              <div>Go to your dashboard and navigate to "API Keys"</div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">3.</span>
+              <div>Click "Create Key" and give it a name like "LLM Comparator"</div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">4.</span>
+              <div>Copy your API key (starts with "sk-or-") and keep it secure</div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Configuring the Comparator</h3>
+          <ol class="space-y-4 text-gray-600 dark:text-gray-300">
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">1.</span>
+              <div>Open the LLM Response Comparator</div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">2.</span>
+              <div>Click the ⚙️ settings button in the top-right corner</div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">3.</span>
+              <div>Paste your OpenRouter API key in the designated field</div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">4.</span>
+              <div>Select 2-4 models you want to compare (start with 2 for simplicity)</div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">5.</span>
+              <div>Click "Save" to store your configuration</div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="bg-yellow-50 dark:bg-yellow-900/50 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p class="text-yellow-800 dark:text-yellow-200">
+            <strong>Privacy Note:</strong> Your API key is stored locally in your browser and only used 
+            to communicate directly with OpenRouter. No data is sent to any other servers.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Model Selection -->
+    <section id="model-selection" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">3</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Model Selection Guide</h2>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-8">
+          Understanding each model's strengths helps you choose the right combination for comparison.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Claude 3 Series</h3>
+            <div class="space-y-4">
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-orange-500 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">Claude 3 Haiku</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Fast, cost-effective, great for simple tasks</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-orange-600 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">Claude 3 Sonnet</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Balanced performance and reasoning</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-orange-700 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">Claude 3 Opus</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Most powerful, complex reasoning and analysis</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">GPT-4o Series</h3>
+            <div class="space-y-4">
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-green-500 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">GPT-4o</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">OpenAI's flagship, great for creative tasks</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-green-600 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">GPT-4o Mini</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Faster, more affordable version</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Other Models</h3>
+            <div class="space-y-4">
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-blue-500 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">Gemini 1.5 Pro</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Google's advanced model with strong reasoning</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-purple-500 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">Mistral Large</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">European model, efficient and capable</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-3 h-3 rounded-full bg-red-500 mt-2"></div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">Llama 3.1 8B</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Open source, fast and cost-effective</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Selection Tips</h3>
+            <div class="space-y-3">
+              <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3">
+                <p class="text-blue-800 dark:text-blue-200 text-sm">
+                  <strong>For Writing:</strong> Compare Claude 3 Opus with GPT-4o
+                </p>
+              </div>
+              
+              <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-3">
+                <p class="text-green-800 dark:text-green-200 text-sm">
+                  <strong>For Analysis:</strong> Try Claude 3 Sonnet vs Gemini 1.5 Pro
+                </p>
+              </div>
+              
+              <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-3">
+                <p class="text-purple-800 dark:text-purple-200 text-sm">
+                  <strong>For Speed:</strong> Compare Haiku with GPT-4o Mini
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Recommended Starting Combinations:</h4>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p class="font-medium text-gray-700 dark:text-gray-300">General Purpose:</p>
+              <p class="text-gray-600 dark:text-gray-400">Claude 3 Sonnet + GPT-4o</p>
+            </div>
+            <div>
+              <p class="font-medium text-gray-700 dark:text-gray-300">Budget Conscious:</p>
+              <p class="text-gray-600 dark:text-gray-400">Claude 3 Haiku + GPT-4o Mini</p>
+            </div>
+            <div>
+              <p class="font-medium text-gray-700 dark:text-gray-300">High Performance:</p>
+              <p class="text-gray-600 dark:text-gray-400">Claude 3 Opus + GPT-4o + Gemini 1.5 Pro</p>
+            </div>
+            <div>
+              <p class="font-medium text-gray-700 dark:text-gray-300">Diverse Comparison:</p>
+              <p class="text-gray-600 dark:text-gray-400">One from each provider</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Running Comparisons -->
+    <section id="running-comparisons" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">4</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Running Comparisons</h2>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Step-by-Step Process</h3>
+          <ol class="space-y-4 text-gray-600 dark:text-gray-300">
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">1.</span>
+              <div>
+                <strong>Enter Your Prompt:</strong> Type or paste your prompt in the large text area. 
+                Be specific about what you want to achieve.
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">2.</span>
+              <div>
+                <strong>Review Selected Models:</strong> Ensure you have 2-4 models selected for comparison.
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">3.</span>
+              <div>
+                <strong>Click "Run Comparison":</strong> The tool will send your prompt to all selected models simultaneously.
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">4.</span>
+              <div>
+                <strong>Wait for Results:</strong> Models will respond in parallel, with loading indicators showing progress.
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Example Comparison</h3>
+          <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+            <p class="text-gray-600 dark:text-gray-400 mb-4">Let's compare how different models explain a complex topic:</p>
+            
+            <div class="bg-white dark:bg-gray-800 rounded border p-4 mb-4">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Sample Prompt:</p>
+              <p class="text-gray-800 dark:text-gray-200 font-mono text-sm">
+                "Explain quantum computing in simple terms that a high school student could understand. 
+                Include an analogy and mention one real-world application."
+              </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="bg-orange-50 dark:bg-orange-900/30 rounded p-3">
+                <h4 class="font-medium text-orange-800 dark:text-orange-200 mb-2">Claude 3 Sonnet</h4>
+                <p class="text-xs text-orange-700 dark:text-orange-300">
+                  Likely to provide: Structured explanation with clear analogies and practical examples
+                </p>
+              </div>
+              
+              <div class="bg-green-50 dark:bg-green-900/30 rounded p-3">
+                <h4 class="font-medium text-green-800 dark:text-green-200 mb-2">GPT-4o</h4>
+                <p class="text-xs text-green-700 dark:text-green-300">
+                  Likely to provide: Creative analogies with engaging explanations and current applications
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Understanding the Interface</h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Response Cards</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Color-coded model identification</li>
+                <li>• Response time and token usage</li>
+                <li>• Full response text with formatting</li>
+                <li>• Copy button for easy sharing</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Performance Metrics</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Response time in milliseconds</li>
+                <li>• Token count for cost estimation</li>
+                <li>• Error handling for failed requests</li>
+                <li>• Timestamp for tracking</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <p class="text-green-800 dark:text-green-200">
+            <strong>Pro Tip:</strong> Try the same prompt multiple times to see consistency across models. 
+            Some models may give different responses to identical prompts.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Analyzing Results -->
+    <section id="analyzing-results" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">5</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Analyzing Results</h2>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-8">
+          Learn how to interpret and compare the responses to make informed decisions about model selection.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Quality Assessment</h3>
+            <div class="space-y-4">
+              <div class="border-l-4 border-blue-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Accuracy</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Check factual correctness and relevance to your prompt</p>
+              </div>
+              
+              <div class="border-l-4 border-green-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Clarity</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Evaluate how well-structured and understandable the response is</p>
+              </div>
+              
+              <div class="border-l-4 border-purple-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Completeness</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Does the response fully address all parts of your prompt?</p>
+              </div>
+              
+              <div class="border-l-4 border-orange-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Style</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Consider tone, formality, and appropriateness for your use case</p>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Performance Metrics</h3>
+            <div class="space-y-4">
+              <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Response Time</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  Faster models (usually 1-3 seconds) are better for interactive applications. 
+                  Slower models (3-10 seconds) often provide more thoughtful responses.
+                </p>
+              </div>
+              
+              <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Token Usage</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  Higher token counts mean longer responses and higher costs. 
+                  Consider whether the extra length provides proportional value.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Common Comparison Patterns</h3>
+          <div class="grid gap-4">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Claude vs GPT-4o</h4>
+              <p class="text-blue-700 dark:text-blue-300 text-sm">
+                Claude often provides more structured, analytical responses. GPT-4o tends to be more creative and conversational.
+              </p>
+            </div>
+            
+            <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">Expensive vs Budget Models</h4>
+              <p class="text-green-700 dark:text-green-300 text-sm">
+                Premium models (Opus, GPT-4o) excel at complex reasoning. Budget models (Haiku, Mini) are great for simple tasks.
+              </p>
+            </div>
+            
+            <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">Specialized vs General Models</h4>
+              <p class="text-purple-700 dark:text-purple-300 text-sm">
+                Some models excel in specific domains (coding, writing, analysis). Test with domain-specific prompts.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Making Your Decision</h3>
+          <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Decision Framework:</h4>
+            <ol class="space-y-2 text-gray-600 dark:text-gray-300">
+              <li><strong>1. Quality First:</strong> Which response best meets your requirements?</li>
+              <li><strong>2. Consistency:</strong> Test the same prompt multiple times - which model is most reliable?</li>
+              <li><strong>3. Speed Requirements:</strong> Do you need real-time responses or can you wait for quality?</li>
+              <li><strong>4. Cost Considerations:</strong> Factor in token usage and pricing for your volume</li>
+              <li><strong>5. Use Case Fit:</strong> Which model aligns best with your specific application?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 dark:bg-yellow-900/50 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p class="text-yellow-800 dark:text-yellow-200">
+            <strong>Remember:</strong> The "best" model depends entirely on your specific use case. 
+            A model that excels at creative writing might not be ideal for technical analysis.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: History Management -->
+    <section id="history-management" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">6</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">History Management</h2>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-8">
+          Track your comparisons over time and build a knowledge base of model performance for different tasks.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Automatic History Tracking</h3>
+            <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+              <li class="flex items-start">
+                <span class="text-primary mr-2 mt-1">•</span>
+                <div>
+                  <strong>Every comparison is saved</strong> automatically to your browser's local storage
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-primary mr-2 mt-1">•</span>
+                <div>
+                  <strong>Last 20 comparisons</strong> are kept for quick reference
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-primary mr-2 mt-1">•</span>
+                <div>
+                  <strong>Timestamps and model combinations</strong> are recorded for each comparison
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-primary mr-2 mt-1">•</span>
+                <div>
+                  <strong>Full responses and performance data</strong> are preserved
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Using the History Tab</h3>
+            <ol class="space-y-3 text-gray-600 dark:text-gray-300">
+              <li class="flex">
+                <span class="font-bold text-primary mr-2">1.</span>
+                <div>Click the "History" tab to view past comparisons</div>
+              </li>
+              <li class="flex">
+                <span class="font-bold text-primary mr-2">2.</span>
+                <div>See prompts, model combinations, and dates at a glance</div>
+              </li>
+              <li class="flex">
+                <span class="font-bold text-primary mr-2">3.</span>
+                <div>Click "Load Comparison" to restore a previous test</div>
+              </li>
+              <li class="flex">
+                <span class="font-bold text-primary mr-2">4.</span>
+                <div>Use "Clear History" to remove all stored comparisons</div>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Export and Documentation</h3>
+          <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Export Your Results:</h4>
+            <ol class="space-y-2 text-gray-600 dark:text-gray-300 mb-4">
+              <li>1. After running a comparison, click "Export Results"</li>
+              <li>2. Download a JSON file containing all comparison data</li>
+              <li>3. Share results with team members or stakeholders</li>
+              <li>4. Import into spreadsheets for further analysis</li>
+            </ol>
+            
+            <div class="bg-white dark:bg-gray-800 rounded border p-4">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Export includes:</p>
+              <ul class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                <li>• Original prompt and timestamp</li>
+                <li>• Model names and configurations</li>
+                <li>• Full response text from each model</li>
+                <li>• Performance metrics (timing, tokens)</li>
+                <li>• Error information if any models failed</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Building Your Model Knowledge Base</h3>
+          <div class="grid gap-4">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Track Patterns</h4>
+              <p class="text-blue-700 dark:text-blue-300 text-sm">
+                Notice which models consistently perform better for your specific types of prompts and tasks.
+              </p>
+            </div>
+            
+            <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">Performance Trends</h4>
+              <p class="text-green-700 dark:text-green-300 text-sm">
+                Monitor response times and token usage to understand cost implications over time.
+              </p>
+            </div>
+            
+            <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">Quality Evolution</h4>
+              <p class="text-purple-700 dark:text-purple-300 text-sm">
+                Document which models improve or change behavior over time as they receive updates.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <p class="text-green-800 dark:text-green-200">
+            <strong>Best Practice:</strong> Create a naming convention for your test prompts and regularly 
+            export results to build a comprehensive model performance database for your use cases.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Best Practices -->
+    <section id="best-practices" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">7</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Best Practices & Advanced Tips</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Effective Testing Strategies</h3>
+            <div class="space-y-4">
+              <div class="border-l-4 border-blue-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Start Simple</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Begin with clear, specific prompts before testing complex scenarios</p>
+              </div>
+              
+              <div class="border-l-4 border-green-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Test Variations</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Try slightly different wordings of the same prompt to test consistency</p>
+              </div>
+              
+              <div class="border-l-4 border-purple-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Domain-Specific Testing</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Create test suites for your specific industry or use case</p>
+              </div>
+              
+              <div class="border-l-4 border-orange-500 pl-4">
+                <h4 class="font-semibold text-gray-900 dark:text-white">Edge Case Exploration</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Test how models handle ambiguous or challenging prompts</p>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cost Optimization</h3>
+            <div class="space-y-4">
+              <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Monitor Token Usage</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  Track tokens per model to understand cost implications. 
+                  Shorter responses aren't always better, but be aware of the trade-offs.
+                </p>
+              </div>
+              
+              <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Strategic Model Selection</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  Use expensive models (Opus, GPT-4o) for complex tasks and cheaper ones 
+                  (Haiku, Mini) for simple operations in production.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Prompt Engineering for Comparisons</h3>
+          <div class="grid gap-4">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Standardized Prompts</h4>
+              <p class="text-blue-700 dark:text-blue-300 text-sm">
+                Use consistent prompt formats across comparisons to ensure fair evaluation of model capabilities.
+              </p>
+            </div>
+            
+            <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">Clear Success Criteria</h4>
+              <p class="text-green-700 dark:text-green-300 text-sm">
+                Define what constitutes a good response before running comparisons. Include these criteria in your prompts.
+              </p>
+            </div>
+            
+            <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">Context Consistency</h4>
+              <p class="text-purple-700 dark:text-purple-300 text-sm">
+                Provide the same background information and constraints to all models for fair comparison.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Common Use Cases</h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Content Creation</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Compare writing styles and creativity</li>
+                <li>• Test brand voice consistency</li>
+                <li>• Evaluate technical accuracy</li>
+                <li>• Assess audience appropriateness</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Business Analysis</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Compare analytical depth</li>
+                <li>• Test data interpretation skills</li>
+                <li>• Evaluate recommendation quality</li>
+                <li>• Assess risk consideration</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Technical Tasks</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Compare code quality and style</li>
+                <li>• Test debugging capabilities</li>
+                <li>• Evaluate explanation clarity</li>
+                <li>• Assess best practice adherence</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Customer Service</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Compare response empathy</li>
+                <li>• Test problem-solving approaches</li>
+                <li>• Evaluate solution completeness</li>
+                <li>• Assess tone appropriateness</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 dark:bg-yellow-900/50 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p class="text-yellow-800 dark:text-yellow-200">
+            <strong>Pro Tip:</strong> Create a library of benchmark prompts for different tasks. 
+            Use these consistently to evaluate new models or track performance changes over time.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Troubleshooting -->
+    <section id="troubleshooting" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">8</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Troubleshooting</h2>
+        </div>
+
+        <div class="space-y-6">
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">API Key Issues</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Error: "Please enter your OpenRouter API key and save settings"
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Verify your API key starts with "sk-or-" and is entered correctly</li>
+                <li>• Check that you clicked "Save" after entering the key</li>
+                <li>• Ensure your OpenRouter account has sufficient credits</li>
+                <li>• Try refreshing the page and re-entering your settings</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Comparison Failures</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Some models show "Error" messages instead of responses
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Check your internet connection stability</li>
+                <li>• Verify you have access to the specific models (some require higher account tiers)</li>
+                <li>• Try with a simpler prompt to test basic functionality</li>
+                <li>• Reduce the number of models being compared simultaneously</li>
+                <li>• Check OpenRouter status page for service issues</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Performance Issues</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Slow responses or timeouts during comparisons
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Compare fewer models at once (start with 2 instead of 4)</li>
+                <li>• Use shorter prompts for testing</li>
+                <li>• Check if specific models are consistently slow</li>
+                <li>• Try during off-peak hours when API load is lower</li>
+                <li>• Clear browser cache and restart the application</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">History/Storage Problems</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Comparisons not saving or history not loading
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Check if local storage is enabled in your browser</li>
+                <li>• Exit private/incognito mode (storage is limited there)</li>
+                <li>• Clear browser data and start fresh if storage is corrupted</li>
+                <li>• Export important comparisons before clearing storage</li>
+                <li>• Try a different browser to isolate the issue</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Model Selection Issues</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Can't select certain models or getting "model not available" errors
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Check your OpenRouter account tier - some models require paid plans</li>
+                <li>• Verify the model IDs are correct and still supported</li>
+                <li>• Try selecting different model combinations</li>
+                <li>• Check OpenRouter documentation for model availability</li>
+                <li>• Contact OpenRouter support for account-specific issues</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 bg-blue-50 dark:bg-blue-900/50 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3">Still Need Help?</h3>
+          <div class="space-y-3 text-blue-700 dark:text-blue-300">
+            <p>
+              <strong>Check Browser Console:</strong> Press F12 and look in the Console tab for detailed error messages.
+            </p>
+            <p>
+              <strong>Test with Simple Prompts:</strong> Try "Hello, how are you?" to verify basic functionality.
+            </p>
+            <p>
+              <strong>OpenRouter Resources:</strong> Visit the OpenRouter documentation and status page for service updates.
+            </p>
+            <p>
+              <strong>Browser Compatibility:</strong> Ensure you're using a modern browser with JavaScript enabled.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 dark:text-gray-400">
+      <p>&copy; 2025 LLM Response Comparator Tutorial. Built for AI researchers and practitioners.</p>
+    </footer>
+  </div>
+
+  <script>
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add active section highlighting to table of contents
+    const sections = document.querySelectorAll('section[id]');
+    const tocLinks = document.querySelectorAll('a[href^="#"]');
+
+    function highlightCurrentSection() {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('font-bold');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('font-bold');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightCurrentSection);
+  </script>
+</body>
+</html>
