@@ -1,0 +1,42 @@
+{
+  "name": "promptvcs",
+  "version": "1.0.0",
+  "description": "A Git-like version control system for AI prompts and prompt engineering teams",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python3 -m http.server 8000",
+    "deploy": "echo 'Deploy to GitHub Pages by pushing to main branch'",
+    "test": "echo 'Open http://localhost:8000 in your browser'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/username/promptvcs.git"
+  },
+  "keywords": [
+    "ai",
+    "prompts",
+    "version-control",
+    "git",
+    "prompt-engineering",
+    "collaboration",
+    "performance-tracking",
+    "github-pages"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/username/promptvcs/issues"
+  },
+  "homepage": "https://username.github.io/promptvcs",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
