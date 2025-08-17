@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptVCS - Prompt Version Control System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-code-branch"></i>
+                <h1>PromptVCS</h1>
+            </div>
+            <nav class="nav">
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#repositories" class="nav-link">Repositories</a>
+                <a href="#teams" class="nav-link">Teams</a>
+                <a href="tutorial.html" class="nav-link tutorial-link">
+                    <i class="fas fa-graduation-cap"></i> Tutorial
+                </a>
+            </nav>
+            <div class="user-actions">
+                <button class="btn btn-primary" id="newRepoBtn">
+                    <i class="fas fa-plus"></i> New Repository
+                </button>
+                <div class="user-profile" id="userProfile">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userName">User</span>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item" onclick="promptVCS.openUserSettings()">
+                            <i class="fas fa-cog"></i> Settings
+                        </div>
+                        <div class="dropdown-item" onclick="promptVCS.openUserProfile()">
+                            <i class="fas fa-user"></i> Profile
+                        </div>
+                        <div class="dropdown-item" onclick="promptVCS.exportData()">
+                            <i class="fas fa-download"></i> Export Data
+                        </div>
+                        <div class="dropdown-item" onclick="promptVCS.importData()">
+                            <i class="fas fa-upload"></i> Import Data
+                        </div>
+                        <div class="dropdown-item danger" onclick="promptVCS.clearAllData()">
+                            <i class="fas fa-trash"></i> Clear All Data
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                    <p>Manage your prompt repositories with Git-like version control</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-folder-open"></i>
+                        <div class="stat-info">
+                            <h3 id="repoCount">0</h3>
+                            <p>Repositories</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-code-branch"></i>
+                        <div class="stat-info">
+                            <h3 id="branchCount">0</h3>
+                            <p>Active Branches</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <h3 id="collaboratorCount">0</h3>
+                            <p>Collaborators</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <div class="stat-info">
+                            <h3 id="performanceScore">0%</h3>
+                            <p>Avg Performance</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="activityList" class="activity-list">
+                        <div class="activity-item">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Welcome to PromptVCS! Create your first repository to get started.</p>
+                            <span class="activity-time">Just now</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Repositories Section -->
+            <section id="repositories" class="section">
+                <div class="section-header">
+                    <h2>Repositories</h2>
+                    <button class="btn btn-primary" id="addRepoBtn">
+                        <i class="fas fa-plus"></i> Create Repository
+                    </button>
+                </div>
+                <div id="repositoryList" class="repository-grid">
+                    <!-- Repositories will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Teams Section -->
+            <section id="teams" class="section">
+                <div class="section-header">
+                    <h2>Teams & Collaboration</h2>
+                    <button class="btn btn-primary" id="createTeamBtn">
+                        <i class="fas fa-users"></i> Create Team
+                    </button>
+                </div>
+                <div id="teamsList" class="teams-grid">
+                    <!-- Teams will be dynamically added here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Repository Modal -->
+    <div id="repoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="repoModalTitle">Create New Repository</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="repoForm">
+                    <div class="form-group">
+                        <label for="repoName">Repository Name</label>
+                        <input type="text" id="repoName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="repoDescription">Description</label>
+                        <textarea id="repoDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="initialPrompt">Initial Prompt</label>
+                        <textarea id="initialPrompt" rows="5" placeholder="Enter your initial prompt here..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="isPrivate">
+                            Private Repository
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelRepo">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Repository</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Repository Detail Modal -->
+    <div id="repoDetailModal" class="modal large">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="repoDetailTitle">Repository Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="repo-detail-tabs">
+                    <button class="tab-btn active" data-tab="versions">Versions</button>
+                    <button class="tab-btn" data-tab="performance">Performance</button>
+                    <button class="tab-btn" data-tab="collaborators">Collaborators</button>
+                    <button class="tab-btn" data-tab="conflicts">Conflicts</button>
+                </div>
+
+                <div id="versionsTab" class="tab-content active">
+                    <div class="version-controls">
+                        <button class="btn btn-primary" id="newVersionBtn">
+                            <i class="fas fa-plus"></i> New Version
+                        </button>
+                        <button class="btn btn-secondary" id="mergeBtn">
+                            <i class="fas fa-code-branch"></i> Merge Branch
+                        </button>
+                        <select id="branchSelector" class="form-control">
+                            <option value="main">main</option>
+                        </select>
+                    </div>
+                    <div id="versionsList" class="versions-list">
+                        <!-- Versions will be populated here -->
+                    </div>
+                </div>
+
+                <div id="performanceTab" class="tab-content">
+                    <div class="performance-metrics">
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
+                <div id="collaboratorsTab" class="tab-content">
+                    <div class="collaborator-controls">
+                        <input type="email" id="collaboratorEmail" placeholder="Enter email address">
+                        <button class="btn btn-primary" id="addCollaboratorBtn">Add Collaborator</button>
+                    </div>
+                    <div id="collaboratorsList" class="collaborators-list">
+                        <!-- Collaborators will be populated here -->
+                    </div>
+                </div>
+
+                <div id="conflictsTab" class="tab-content">
+                    <div id="conflictsList" class="conflicts-list">
+                        <!-- Conflicts will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version Editor Modal -->
+    <div id="versionModal" class="modal large">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="versionModalTitle">Edit Version</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="versionForm">
+                    <div class="form-group">
+                        <label for="versionMessage">Commit Message</label>
+                        <input type="text" id="versionMessage" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptContent">Prompt Content</label>
+                        <textarea id="promptContent" rows="10" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="versionTags">Tags (comma-separated)</label>
+                        <input type="text" id="versionTags" placeholder="production, tested, v1.0">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelVersion">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Version</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Modal -->
+    <div id="teamModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="teamModalTitle">Create Team</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="teamForm">
+                    <div class="form-group">
+                        <label for="teamName">Team Name</label>
+                        <input type="text" id="teamName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="teamDescription">Description</label>
+                        <textarea id="teamDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="teamMembers">Team Members (comma-separated emails)</label>
+                        <input type="text" id="teamMembers" placeholder="user1@example.com, user2@example.com">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelTeam">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Team</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Detail Modal -->
+    <div id="teamDetailModal" class="modal large">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="teamDetailTitle">Team Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="team-detail-tabs">
+                    <button class="tab-btn active" data-tab="members">Members</button>
+                    <button class="tab-btn" data-tab="repositories">Repositories</button>
+                    <button class="tab-btn" data-tab="settings">Settings</button>
+                </div>
+
+                <div id="membersTab" class="tab-content active">
+                    <div class="member-controls">
+                        <input type="email" id="newMemberEmail" placeholder="Enter email address">
+                        <select id="memberRole">
+                            <option value="member">Member</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <button class="btn btn-primary" id="addMemberBtn">Add Member</button>
+                    </div>
+                    <div id="teamMembersList" class="members-list">
+                        <!-- Team members will be populated here -->
+                    </div>
+                </div>
+
+                <div id="repositoriesTab" class="tab-content">
+                    <div class="repo-controls">
+                        <select id="availableRepos">
+                            <option value="">Select a repository to add</option>
+                        </select>
+                        <button class="btn btn-primary" id="addRepoToTeamBtn">Add Repository</button>
+                    </div>
+                    <div id="teamReposList" class="team-repos-list">
+                        <!-- Team repositories will be populated here -->
+                    </div>
+                </div>
+
+                <div id="settingsTab" class="tab-content">
+                    <form id="teamSettingsForm">
+                        <div class="form-group">
+                            <label for="editTeamName">Team Name</label>
+                            <input type="text" id="editTeamName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTeamDescription">Description</label>
+                            <textarea id="editTeamDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="teamPrivate">
+                                Private Team
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" id="deleteTeamBtn">Delete Team</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div id="userProfileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>User Profile</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userProfileForm">
+                    <div class="form-group">
+                        <label for="userDisplayName">Display Name</label>
+                        <input type="text" id="userDisplayName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email</label>
+                        <input type="email" id="userEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userBio">Bio</label>
+                        <textarea id="userBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="userTimezone">Timezone</label>
+                        <select id="userTimezone">
+                            <option value="UTC">UTC</option>
+                            <option value="EST">Eastern Time</option>
+                            <option value="PST">Pacific Time</option>
+                            <option value="GMT">Greenwich Mean Time</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelUserProfile">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Settings Modal -->
+    <div id="userSettingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userSettingsForm">
+                    <h4>Appearance</h4>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="darkMode">
+                            Dark Mode
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <select id="language">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                        </select>
+                    </div>
+                    
+                    <h4>Notifications</h4>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="emailNotifications" checked>
+                            Email Notifications
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="pushNotifications" checked>
+                            Push Notifications
+                        </label>
+                    </div>
+                    
+                    <h4>Privacy</h4>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="publicProfile">
+                            Public Profile
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="analytics" checked>
+                            Allow Analytics
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelUserSettings">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptVCS Tutorial - Learn Prompt Version Control</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .tutorial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tutorial-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 1rem;
+        }
+        
+        .tutorial-nav {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 2rem;
+            z-index: 10;
+        }
+        
+        .tutorial-nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tutorial-nav a {
+            text-decoration: none;
+            color: #64748b;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .tutorial-nav a:hover {
+            background: #f1f5f9;
+            color: #4f46e5;
+        }
+        
+        .tutorial-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .tutorial-section h2 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .tutorial-section h3 {
+            color: #374151;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            overflow-x: auto;
+        }
+        
+        .tip {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tip::before {
+            content: "💡 ";
+            font-weight: bold;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning::before {
+            content: "⚠️ ";
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature-card {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .feature-card h4 {
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-to-app {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: #4f46e5;
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: all 0.2s;
+            z-index: 100;
+        }
+        
+        .back-to-app:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .video-placeholder {
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        
+        /* Interactive Guide Styles */
+        .interactive-guide {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #7dd3fc;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .guide-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .guide-header i {
+            color: #0ea5e9;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-example {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-explanation h5 {
+            color: #0369a1;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-explanation ul {
+            margin-bottom: 2rem;
+        }
+        
+        .chart-explanation li {
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+        
+        .optimization-tips {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .optimization-tips h6 {
+            color: #0369a1;
+            margin-bottom: 1rem;
+        }
+        
+        .tip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .tip-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #0ea5e9;
+        }
+        
+        .tip-item strong {
+            display: block;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Workflow Showcase Styles */
+        .workflow-showcase {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            border: 1px solid #fbbf24;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .showcase-header i {
+            color: #d97706;
+            margin-bottom: 1rem;
+        }
+        
+        .workflow-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .workflow-example {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .workflow-example h5 {
+            color: #92400e;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .workflow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: #fef3c7;
+            border-radius: 0.5rem;
+        }
+        
+        .step-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .workflow-step strong {
+            display: block;
+            color: #92400e;
+            margin-bottom: 0.25rem;
+        }
+        
+        .workflow-step p {
+            color: #78716c;
+            margin: 0;
+        }
+        
+        .best-practices-summary {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .best-practices-summary h5 {
+            color: #92400e;
+            margin-bottom: 1rem;
+        }
+        
+        .practice-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .practice-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #fef3c7;
+            border-radius: 0.5rem;
+        }
+        
+        .practice-item i {
+            color: #059669;
+            font-size: 1.1rem;
+        }
+        
+        .practice-item span {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        /* Interactive Demo Styles */
+        .interactive-demo {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .demo-header i {
+            font-size: 3rem;
+            color: #4f46e5;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-btn {
+            margin-top: 1rem;
+        }
+        
+        .demo-steps {
+            margin: 2rem 0;
+        }
+        
+        .demo-step {
+            display: none;
+            animation: fadeInSlide 0.5s ease-out;
+        }
+        
+        .demo-step.active {
+            display: block;
+        }
+        
+        .demo-content h5 {
+            color: #4f46e5;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .demo-screenshot {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mock-interface {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .mock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .mock-logo {
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        
+        .mock-nav {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .mock-button {
+            background: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            display: inline-block;
+            margin: 1rem;
+        }
+        
+        .mock-button.highlight {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .mock-form {
+            max-width: 400px;
+        }
+        
+        .mock-field {
+            margin-bottom: 1rem;
+        }
+        
+        .mock-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .mock-field input,
+        .mock-field textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            background: #f9fafb;
+        }
+        
+        .mock-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .mock-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .btn-primary.highlight {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .mock-repo-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            max-width: 350px;
+        }
+        
+        .mock-repo-card h4 {
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        
+        .mock-repo-card p {
+            color: #64748b;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .demo-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .demo-progress {
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tutorial-container {
+                padding: 1rem;
+            }
+            
+            .tutorial-nav ul {
+                flex-direction: column;
+            }
+            
+            .back-to-app {
+                position: static;
+                margin: 1rem 0;
+                display: inline-block;
+                border-radius: 0.5rem;
+                width: auto;
+            }
+            
+            .step {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .step-number {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-to-app" title="Back to PromptVCS App">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <div class="tutorial-container">
+        <div class="tutorial-header">
+            <h1><i class="fas fa-graduation-cap"></i> PromptVCS Tutorial</h1>
+            <p>Master prompt version control with our comprehensive guide</p>
+        </div>
+
+        <nav class="tutorial-nav">
+            <ul>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#repositories">Repositories</a></li>
+                <li><a href="#versioning">Versioning</a></li>
+                <li><a href="#collaboration">Collaboration</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#conflicts">Conflicts</a></li>
+                <li><a href="#best-practices">Best Practices</a></li>
+            </ul>
+        </nav>
+
+        <section id="getting-started" class="tutorial-section">
+            <h2>🚀 Getting Started with PromptVCS</h2>
+            
+            <p>Welcome to PromptVCS, the first Git-like version control system designed specifically for AI prompts. Whether you're a solo developer or working with a team, PromptVCS helps you track, manage, and optimize your prompts with enterprise-grade version control.</p>
+
+            <h3>What is PromptVCS?</h3>
+            <p>PromptVCS brings the power of Git to prompt engineering. Just like how developers track code changes, you can now track prompt changes, collaborate with teams, and maintain a complete history of your prompt evolution.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-code-branch"></i> Version Control</h4>
+                    <p>Track every change to your prompts with detailed commit history</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-users"></i> Team Collaboration</h4>
+                    <p>Work together on prompts with branching and merging capabilities</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-chart-line"></i> Performance Tracking</h4>
+                    <p>Monitor prompt performance across versions and optimize accordingly</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-undo"></i> Easy Rollbacks</h4>
+                    <p>Instantly revert to any previous version when needed</p>
+                </div>
+            </div>
+
+            <h3>Quick Start</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Access the Dashboard</strong>
+                    <p>When you first open PromptVCS, you'll see the dashboard with your statistics and recent activity.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Create Your First Repository</strong>
+                    <p>Click "New Repository" to create your first prompt repository. Think of this as a project folder for related prompts.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Start Versioning</strong>
+                    <p>Add your initial prompt and start creating versions as you refine and improve it.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="repositories" class="tutorial-section">
+            <h2>📁 Working with Repositories</h2>
+
+            <p>Repositories are the foundation of PromptVCS. Each repository contains related prompts and their complete version history.</p>
+
+            <h3>Creating a Repository</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Click "New Repository"</strong>
+                    <p>From the dashboard or repositories page, click the "New Repository" button.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Fill in Repository Details</strong>
+                    <ul>
+                        <li><strong>Name:</strong> Choose a descriptive name (e.g., "Customer Support Bot")</li>
+                        <li><strong>Description:</strong> Explain the purpose of this prompt repository</li>
+                        <li><strong>Initial Prompt:</strong> Add your starting prompt content</li>
+                        <li><strong>Privacy:</strong> Choose public or private visibility</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>Naming Convention:</strong> Use clear, descriptive names that indicate the prompt's purpose. Examples: "Email-Marketing-Bot", "Code-Review-Assistant", "Content-Generator"
+            </div>
+
+            <h3>Repository Structure</h3>
+            <p>Each repository contains:</p>
+            <ul>
+                <li><strong>Versions:</strong> Complete history of prompt changes</li>
+                <li><strong>Branches:</strong> Parallel development streams</li>
+                <li><strong>Collaborators:</strong> Team members with access</li>
+                <li><strong>Performance Data:</strong> Metrics tracking over time</li>
+            </ul>
+
+            <div class="interactive-demo">
+                <div class="demo-header">
+                    <i class="fas fa-play-circle"></i>
+                    <h4>Interactive Demo: Creating Your First Repository</h4>
+                    <button class="btn btn-primary demo-btn" onclick="startDemo()">Start Interactive Demo</button>
+                </div>
+                
+                <div id="demoSteps" class="demo-steps" style="display: none;">
+                    <div class="demo-step active" data-step="1">
+                        <div class="demo-content">
+                            <h5>Step 1: Access the Dashboard</h5>
+                            <div class="demo-screenshot">
+                                <div class="mock-interface">
+                                    <div class="mock-header">
+                                        <div class="mock-logo">🔀 PromptVCS</div>
+                                        <div class="mock-nav">Dashboard | Repositories | Teams | Tutorial</div>
+                                    </div>
+                                    <div class="mock-button highlight">📁 New Repository</div>
+                                </div>
+                            </div>
+                            <p>Click the "New Repository" button in the top navigation or dashboard.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-step" data-step="2">
+                        <div class="demo-content">
+                            <h5>Step 2: Fill Repository Details</h5>
+                            <div class="demo-screenshot">
+                                <div class="mock-form">
+                                    <div class="mock-field">
+                                        <label>Repository Name</label>
+                                        <input type="text" value="Customer Support Bot" readonly>
+                                    </div>
+                                    <div class="mock-field">
+                                        <label>Description</label>
+                                        <textarea readonly>AI prompts for handling customer inquiries</textarea>
+                                    </div>
+                                    <div class="mock-field">
+                                        <label>Initial Prompt</label>
+                                        <textarea readonly>You are a helpful customer support assistant...</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Enter a descriptive name, description, and your initial prompt content.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-step" data-step="3">
+                        <div class="demo-content">
+                            <h5>Step 3: Configure Settings</h5>
+                            <div class="demo-screenshot">
+                                <div class="mock-form">
+                                    <div class="mock-checkbox">
+                                        <input type="checkbox"> Private Repository
+                                    </div>
+                                    <div class="mock-buttons">
+                                        <button class="btn-secondary">Cancel</button>
+                                        <button class="btn-primary highlight">Create Repository</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Choose visibility settings and click "Create Repository" to finish.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-step" data-step="4">
+                        <div class="demo-content">
+                            <h5>Step 4: Repository Created!</h5>
+                            <div class="demo-screenshot">
+                                <div class="mock-interface">
+                                    <div class="mock-repo-card">
+                                        <h4>Customer Support Bot</h4>
+                                        <p>🔀 1 version • 👥 1 collaborator • 📊 85% performance</p>
+                                        <div class="mock-buttons">
+                                            <button class="btn-primary">👁 View</button>
+                                            <button class="btn-secondary">✏️ Edit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Your repository is created! You can now start adding versions and collaborators.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-controls" style="display: none;">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                    <span class="demo-progress">Step 1 of 4</span>
+                    <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="versioning" class="tutorial-section">
+            <h2>🔄 Version Management</h2>
+
+            <p>Version control is the heart of PromptVCS. Every change to your prompt creates a new version, allowing you to track evolution and easily rollback when needed.</p>
+
+            <h3>Creating a New Version</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Open Repository Details</strong>
+                    <p>Click on any repository to open its detail view.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Click "New Version"</strong>
+                    <p>In the Versions tab, click the "New Version" button.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Make Your Changes</strong>
+                    <ul>
+                        <li><strong>Commit Message:</strong> Describe what changed (e.g., "Added context about product features")</li>
+                        <li><strong>Prompt Content:</strong> Edit your prompt text</li>
+                        <li><strong>Tags:</strong> Add labels like "production", "experimental", "tested"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Version History</h3>
+            <p>Every version includes:</p>
+            <ul>
+                <li><strong>Unique ID:</strong> Short identifier for the version</li>
+                <li><strong>Commit Message:</strong> Description of changes</li>
+                <li><strong>Author:</strong> Who made the changes</li>
+                <li><strong>Timestamp:</strong> When the version was created</li>
+                <li><strong>Performance Metrics:</strong> Accuracy, speed, and cost data</li>
+                <li><strong>Tags:</strong> Labels for categorization</li>
+            </ul>
+
+            <div class="code-block">
+Example Version History:
+├── v3.2.1 "Optimized for speed and accuracy" (production, tested)
+├── v3.2.0 "Added empathy and escalation guidelines" (improvement)
+└── v3.1.0 "Initial customer support prompt" (initial, production)
+            </div>
+
+            <h3>Rolling Back to Previous Versions</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Find the Version</strong>
+                    <p>Navigate to the version you want to rollback to in the version history.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Click "Rollback"</strong>
+                    <p>Click the rollback button next to the version.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Confirm the Action</strong>
+                    <p>This creates a new version with the content from the selected version.</p>
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>Rollback Safety:</strong> Rollbacks don't delete history—they create new versions with previous content, so you never lose data.
+            </div>
+        </section>
+
+        <section id="collaboration" class="tutorial-section">
+            <h2>👥 Team Collaboration</h2>
+
+            <p>PromptVCS enables seamless collaboration with branching, merging, and team management features.</p>
+
+            <h3>Adding Collaborators</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Open Repository</strong>
+                    <p>Navigate to the repository you want to share.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Go to Collaborators Tab</strong>
+                    <p>Click on the "Collaborators" tab in the repository details.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Add Team Members</strong>
+                    <p>Enter email addresses and click "Add Collaborator" to invite team members.</p>
+                </div>
+            </div>
+
+            <h3>Working with Branches</h3>
+            <p>Branches allow team members to work on different versions simultaneously without conflicts.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Main Branch</h4>
+                    <p>The primary branch containing production-ready prompts</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Feature Branches</h4>
+                    <p>Separate branches for experimental or development work</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Hotfix Branches</h4>
+                    <p>Quick fixes that need to be merged back to main</p>
+                </div>
+            </div>
+
+            <h3>Creating Teams</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Navigate to Teams</strong>
+                    <p>Click on "Teams" in the main navigation.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Create New Team</strong>
+                    <p>Click "Create Team" and fill in team details.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Manage Team Access</strong>
+                    <p>Add team members and assign repositories to teams for organized access control.</p>
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>Team Best Practice:</strong> Create teams based on projects or departments (e.g., "Marketing Team", "Customer Support", "Product Development")
+            </div>
+        </section>
+
+        <section id="performance" class="tutorial-section">
+            <h2>📊 Performance Tracking</h2>
+
+            <p>Monitor how your prompts perform over time with built-in analytics and performance metrics.</p>
+
+            <h3>Understanding Performance Metrics</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-bullseye"></i> Accuracy</h4>
+                    <p>How well the prompt achieves desired outcomes (0-100%)</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Speed</h4>
+                    <p>Response time in milliseconds</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-dollar-sign"></i> Cost</h4>
+                    <p>API cost per prompt execution</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-chart-line"></i> Trend</h4>
+                    <p>Performance changes over time</p>
+                </div>
+            </div>
+
+            <h3>Viewing Performance Data</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Open Repository</strong>
+                    <p>Navigate to any repository to view its performance.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Performance Tab</strong>
+                    <p>Click the "Performance" tab to see detailed charts and metrics.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Analyze Trends</strong>
+                    <p>Look for patterns in performance across versions to identify improvements or regressions.</p>
+                </div>
+            </div>
+
+            <h3>Performance Optimization Tips</h3>
+            <ul>
+                <li><strong>Track Baseline:</strong> Always measure initial performance before making changes</li>
+                <li><strong>A/B Testing:</strong> Use branches to test different prompt approaches</li>
+                <li><strong>Regular Reviews:</strong> Check performance weekly to catch issues early</li>
+                <li><strong>Version Comparison:</strong> Compare metrics between versions to validate improvements</li>
+            </ul>
+
+            <div class="interactive-guide">
+                <div class="guide-header">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                    <h4>Interactive Guide: Reading Performance Charts</h4>
+                </div>
+                
+                <div class="chart-example">
+                    <canvas id="exampleChart" width="400" height="200" style="max-width: 100%; background: white; border-radius: 0.5rem; padding: 1rem;"></canvas>
+                </div>
+                
+                <div class="chart-explanation">
+                    <h5>Understanding Your Performance Data:</h5>
+                    <ul>
+                        <li><strong>🎯 Accuracy Line (Blue):</strong> Shows how well your prompts achieve desired outcomes</li>
+                        <li><strong>⚡ Speed Line (Green):</strong> Response time in milliseconds - lower is better</li>
+                        <li><strong>📈 Trends:</strong> Look for upward trends in accuracy and downward trends in speed</li>
+                        <li><strong>🔍 Correlations:</strong> Identify versions where both accuracy improved and speed decreased</li>
+                    </ul>
+                    
+                    <div class="optimization-tips">
+                        <h6>Optimization Tips:</h6>
+                        <div class="tip-grid">
+                            <div class="tip-item">
+                                <strong>📊 Baseline First</strong>
+                                <p>Always measure initial performance before making changes</p>
+                            </div>
+                            <div class="tip-item">
+                                <strong>🔬 A/B Testing</strong>
+                                <p>Use branches to test different approaches simultaneously</p>
+                            </div>
+                            <div class="tip-item">
+                                <strong>📅 Regular Reviews</strong>
+                                <p>Check performance weekly to catch regressions early</p>
+                            </div>
+                            <div class="tip-item">
+                                <strong>📝 Document Changes</strong>
+                                <p>Note what changes led to performance improvements</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conflicts" class="tutorial-section">
+            <h2>⚔️ Handling Merge Conflicts</h2>
+
+            <p>When multiple team members work on the same prompt, conflicts may arise. PromptVCS provides tools to detect and resolve these conflicts safely.</p>
+
+            <h3>Understanding Conflicts</h3>
+            <p>Conflicts occur when:</p>
+            <ul>
+                <li>Two people edit the same part of a prompt simultaneously</li>
+                <li>Changes are made to the same line or section</li>
+                <li>Automatic merging cannot determine which version to keep</li>
+            </ul>
+
+            <h3>Conflict Resolution Process</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Conflict Detection</strong>
+                    <p>PromptVCS automatically detects conflicts when attempting to merge branches.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Review Conflicts</strong>
+                    <p>Go to the "Conflicts" tab to see all conflicting changes highlighted.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Choose Resolution Strategy</strong>
+                    <ul>
+                        <li><strong>Accept Main:</strong> Keep the main branch version</li>
+                        <li><strong>Accept Incoming:</strong> Use the feature branch version</li>
+                        <li><strong>Manual Resolution:</strong> Combine both versions manually</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+Example Conflict Display:
+<<<<<<< main
+You are a helpful customer support assistant.
+=======
+You are a highly skilled customer service representative.
+>>>>>>> feature/professional-tone
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Test Resolution</strong>
+                    <p>After resolving conflicts, test the merged prompt to ensure it works as expected.</p>
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>Preventing Conflicts:</strong> Communicate with your team about who's working on what sections, and merge changes frequently to minimize conflicts.
+            </div>
+        </section>
+
+        <section id="best-practices" class="tutorial-section">
+            <h2>🏆 Best Practices</h2>
+
+            <p>Follow these proven practices to get the most out of PromptVCS and maintain high-quality prompt repositories.</p>
+
+            <h3>Repository Organization</h3>
+            <ul>
+                <li><strong>One Purpose per Repository:</strong> Keep related prompts together, but separate different use cases</li>
+                <li><strong>Clear Naming:</strong> Use descriptive repository names that indicate their purpose</li>
+                <li><strong>Consistent Structure:</strong> Establish naming conventions for your team</li>
+            </ul>
+
+            <h3>Version Control Hygiene</h3>
+            <ul>
+                <li><strong>Meaningful Commit Messages:</strong> Always describe what changed and why</li>
+                <li><strong>Small, Focused Changes:</strong> Make incremental improvements rather than massive rewrites</li>
+                <li><strong>Tag Important Versions:</strong> Mark production releases, tested versions, and milestones</li>
+                <li><strong>Regular Commits:</strong> Don't wait too long between versions</li>
+            </ul>
+
+            <h3>Collaboration Guidelines</h3>
+            <ul>
+                <li><strong>Branch for Features:</strong> Use feature branches for experimental work</li>
+                <li><strong>Code Review Process:</strong> Have team members review changes before merging</li>
+                <li><strong>Communication:</strong> Use commit messages and repository descriptions to communicate intent</li>
+                <li><strong>Access Control:</strong> Assign appropriate roles (owner, contributor) based on responsibility</li>
+            </ul>
+
+            <h3>Performance Optimization</h3>
+            <ul>
+                <li><strong>Baseline Measurement:</strong> Always establish performance baselines before making changes</li>
+                <li><strong>A/B Testing:</strong> Use branches to test different approaches</li>
+                <li><strong>Regular Monitoring:</strong> Check performance trends weekly</li>
+                <li><strong>Documentation:</strong> Note what changes led to performance improvements</li>
+            </ul>
+
+            <h3>Security and Privacy</h3>
+            <ul>
+                <li><strong>Sensitive Data:</strong> Never include API keys or personal data in prompts</li>
+                <li><strong>Private Repositories:</strong> Use private repositories for confidential prompts</li>
+                <li><strong>Access Reviews:</strong> Regularly review who has access to your repositories</li>
+                <li><strong>Backup Strategy:</strong> Export important repositories regularly</li>
+            </ul>
+
+            <div class="warning">
+                <strong>Remember:</strong> PromptVCS stores data locally in your browser. For production use, consider implementing server-side storage and backup solutions.
+            </div>
+
+            <h3>Common Pitfalls to Avoid</h3>
+            <ul>
+                <li>❌ Making large changes without testing</li>
+                <li>❌ Ignoring performance metrics</li>
+                <li>❌ Not communicating changes to team members</li>
+                <li>❌ Skipping commit messages or using vague descriptions</li>
+                <li>❌ Working directly on main branch for experimental features</li>
+            </ul>
+
+            <h3>Success Metrics</h3>
+            <p>Track these indicators to measure your prompt development success:</p>
+            <ul>
+                <li><strong>Performance Improvement:</strong> Are your prompts getting more accurate over time?</li>
+                <li><strong>Team Velocity:</strong> How quickly can you iterate and improve prompts?</li>
+                <li><strong>Conflict Frequency:</strong> Are merge conflicts decreasing as your team coordination improves?</li>
+                <li><strong>Rollback Frequency:</strong> How often do you need to revert changes?</li>
+            </ul>
+
+            <div class="workflow-showcase">
+                <div class="showcase-header">
+                    <i class="fas fa-users fa-2x"></i>
+                    <h4>Real-World Workflow Examples</h4>
+                </div>
+                
+                <div class="workflow-examples">
+                    <div class="workflow-example">
+                        <h5>🏢 Marketing Team Workflow</h5>
+                        <div class="workflow-steps">
+                            <div class="workflow-step">
+                                <span class="step-icon">1️⃣</span>
+                                <div>
+                                    <strong>Create Campaign Repository</strong>
+                                    <p>Team lead creates "Email-Marketing-Q4" repository</p>
+                                </div>
+                            </div>
+                            <div class="workflow-step">
+                                <span class="step-icon">2️⃣</span>
+                                <div>
+                                    <strong>Branch for Each Campaign</strong>
+                                    <p>feature/holiday-sale, feature/product-launch branches</p>
+                                </div>
+                            </div>
+                            <div class="workflow-step">
+                                <span class="step-icon">3️⃣</span>
+                                <div>
+                                    <strong>Collaborative Editing</strong>
+                                    <p>Copywriters work on prompts, track A/B test results</p>
+                                </div>
+                            </div>
+                            <div class="workflow-step">
+                                <span class="step-icon">4️⃣</span>
+                                <div>
+                                    <strong>Review & Merge</strong>
+                                    <p>Team lead reviews performance, merges best versions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-example">
+                        <h5>🤖 AI Development Team</h5>
+                        <div class="workflow-steps">
+                            <div class="workflow-step">
+                                <span class="step-icon">🔬</span>
+                                <div>
+                                    <strong>Experiment Branches</strong>
+                                    <p>Create branches for different prompt engineering approaches</p>
+                                </div>
+                            </div>
+                            <div class="workflow-step">
+                                <span class="step-icon">📊</span>
+                                <div>
+                                    <strong>Performance Tracking</strong>
+                                    <p>Monitor accuracy, speed, and cost metrics across versions</p>
+                                </div>
+                            </div>
+                            <div class="workflow-step">
+                                <span class="step-icon">🏷️</span>
+                                <div>
+                                    <strong>Version Tagging</strong>
+                                    <p>Tag stable versions as "production", "tested", "experimental"</p>
+                                </div>
+                            </div>
+                            <div class="workflow-step">
+                                <span class="step-icon">🚀</span>
+                                <div>
+                                    <strong>Deployment</strong>
+                                    <p>Deploy tagged production versions with confidence</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="best-practices-summary">
+                    <h5>🏆 Key Success Patterns</h5>
+                    <div class="practice-list">
+                        <div class="practice-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Regular commits with meaningful messages</span>
+                        </div>
+                        <div class="practice-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Branch-based feature development</span>
+                        </div>
+                        <div class="practice-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Performance-driven decision making</span>
+                        </div>
+                        <div class="practice-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Collaborative review processes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tutorial-section">
+            <h2>🎯 Next Steps</h2>
+            
+            <p>Congratulations! You now have a comprehensive understanding of PromptVCS. Here's what to do next:</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-play"></i> Start Practicing</h4>
+                    <p>Create your first repository and start experimenting with the features</p>
+                    <a href="index.html" class="btn btn-primary">Go to App</a>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-users"></i> Invite Your Team</h4>
+                    <p>Share PromptVCS with your colleagues and start collaborating</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-book"></i> Advanced Features</h4>
+                    <p>Explore advanced branching strategies and automation options</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-heart"></i> Share Feedback</h4>
+                    <p>Help us improve PromptVCS by sharing your experience and suggestions</p>
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>Keep Learning:</strong> Bookmark this tutorial for reference, and don't hesitate to experiment. PromptVCS is designed to be safe—you can't lose your prompt history.
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="index.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    <i class="fas fa-rocket"></i> Start Using PromptVCS
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Create example performance chart
+        function createExampleChart() {
+            const ctx = document.getElementById('exampleChart');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['v1.0', 'v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.5'],
+                    datasets: [
+                        {
+                            label: 'Accuracy (%)',
+                            data: [75, 82, 78, 89, 91, 94],
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#4f46e5',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6
+                        },
+                        {
+                            label: 'Speed (ms)',
+                            data: [250, 220, 240, 180, 160, 140],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Prompt Performance Over Time',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: { padding: 20, usePointStyle: true }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Accuracy (%)',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Speed (ms)',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { drawOnChartArea: false },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Version',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load Chart.js and create example chart
+            if (typeof Chart !== 'undefined') {
+                createExampleChart();
+            } else {
+                // Load Chart.js if not already loaded
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+                script.onload = createExampleChart;
+                document.head.appendChild(script);
+            }
+        });
+
+        // Interactive Demo Functionality
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function startDemo() {
+            document.getElementById('demoSteps').style.display = 'block';
+            document.querySelector('.demo-controls').style.display = 'flex';
+            document.querySelector('.demo-btn').style.display = 'none';
+            showStep(1);
+        }
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.demo-step').forEach(s => s.classList.remove('active'));
+            
+            // Show current step
+            document.querySelector(`[data-step="${step}"]`).classList.add('active');
+            
+            // Update progress
+            document.querySelector('.demo-progress').textContent = `Step ${step} of ${totalSteps}`;
+            
+            // Update button states
+            const prevBtn = document.querySelector('.demo-controls .btn-secondary');
+            const nextBtn = document.querySelector('.demo-controls .btn-primary');
+            
+            prevBtn.disabled = step === 1;
+            prevBtn.style.opacity = step === 1 ? '0.5' : '1';
+            
+            if (step === totalSteps) {
+                nextBtn.textContent = 'Try It Now!';
+                nextBtn.onclick = () => window.open('../index.html', '_blank');
+            } else {
+                nextBtn.textContent = 'Next →';
+                nextBtn.onclick = nextStep;
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.tutorial-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section in navigation
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.tutorial-section');
+            const navLinks = document.querySelectorAll('.tutorial-nav a');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 100 && rect.bottom >= 100) {
+                    currentSection = '#' + section.id;
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.background = '';
+                link.style.color = '';
+                if (link.getAttribute('href') === currentSection) {
+                    link.style.background = '#f1f5f9';
+                    link.style.color = '#4f46e5';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
