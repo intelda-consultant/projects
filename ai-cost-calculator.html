@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Cost Calculator</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#10B981',
+            secondary: '#059669',
+          },
+        },
+      },
+    }
+    
+    // Check for dark mode preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+    
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      if (event.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    // Cookie utility functions
+    const setCookie = (name, value, days = 365) => {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      const expires = `expires=${date.toUTCString()}`;
+      document.cookie = `${name}=${value};${expires};path=/;SameSite=Strict`;
+    };
+
+    const getCookie = (name) => {
+      const cookieName = `${name}=`;
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.indexOf(cookieName) === 0) {
+          return cookie.substring(cookieName.length, cookie.length);
+        }
+      }
+      return "";
+    };
+
+    const App = () => {
+      // Model pricing data (per 1M tokens)
+      const modelPricing = {
+        'OpenAI': {
+          'gpt-4o': { input: 2.50, output: 10.00, description: 'Most capable GPT-4 model' },
+          'gpt-4o-mini': { input: 0.15, output: 0.60, description: 'Affordable and intelligent small model' },
+          'gpt-4-turbo': { input: 10.00, output: 30.00, description: 'Previous generation flagship' },
+          'gpt-3.5-turbo': { input: 0.50, output: 1.50, description: 'Fast and affordable' }
+        },
+        'Anthropic': {
+          'claude-3-opus': { input: 15.00, output: 75.00, description: 'Most powerful Claude model' },
+          'claude-3-sonnet': { input: 3.00, output: 15.00, description: 'Balanced performance and speed' },
+          'claude-3-haiku': { input: 0.25, output: 1.25, description: 'Fastest and most compact' }
+        },
+        'Google': {
+          'gemini-1.5-pro': { input: 7.00, output: 21.00, description: 'Advanced reasoning and long context' },
+          'gemini-1.5-flash': { input: 0.35, output: 1.05, description: 'Fast and versatile performance' }
+        },
+        'Mistral': {
+          'mistral-large': { input: 8.00, output: 24.00, description: 'Top-tier reasoning capabilities' },
+          'mistral-medium': { input: 2.70, output: 8.10, description: 'Balanced performance' },
+          'mistral-small': { input: 2.00, output: 6.00, description: 'Cost-effective solution' }
+        },
+        'Meta': {
+          'llama-3.1-405b': { input: 5.32, output: 16.00, description: 'Largest open-source model' },
+          'llama-3.1-70b': { input: 0.88, output: 2.64, description: 'Powerful open-source model' },
+          'llama-3.1-8b': { input: 0.18, output: 0.54, description: 'Efficient open-source model' }
+        }
+      };
+
+      // State management
+      const [selectedProvider, setSelectedProvider] = React.useState('OpenAI');
+      const [selectedModel, setSelectedModel] = React.useState('gpt-4o');
+      const [inputTokens, setInputTokens] = React.useState(1000);
+      const [outputTokens, setOutputTokens] = React.useState(500);
+      const [requests, setRequests] = React.useState(100);
+      const [timeframe, setTimeframe] = React.useState('month');
+      const [activeTab, setActiveTab] = React.useState('calculator');
+      const [savedCalculations, setSavedCalculations] = React.useState(() => {
+        const saved = localStorage.getItem('ai_cost_calculations');
+        return saved ? JSON.parse(saved) : [];
+      });
+
+      // Usage patterns for common scenarios
+      const usagePatterns = {
+        'Content Creation': { input: 500, output: 1500, requests: 200 },
+        'Customer Support': { input: 200, output: 400, requests: 1000 },
+        'Code Generation': { input: 800, output: 1200, requests: 150 },
+        'Data Analysis': { input: 1500, output: 800, requests: 50 },
+        'Translation': { input: 300, output: 300, requests: 500 },
+        'Summarization': { input: 2000, output: 400, requests: 100 }
+      };
+
+      // Calculate costs
+      const calculateCosts = () => {
+        const model = modelPricing[selectedProvider][selectedModel];
+        if (!model) return { inputCost: 0, outputCost: 0, totalCost: 0 };
+
+        const inputCost = (inputTokens / 1000000) * model.input * requests;
+        const outputCost = (outputTokens / 1000000) * model.output * requests;
+        const totalCost = inputCost + outputCost;
+
+        const multiplier = timeframe === 'day' ? 30.44 : timeframe === 'year' ? 1/12 : 1;
+        
+        return {
+          inputCost: inputCost * multiplier,
+          outputCost: outputCost * multiplier,
+          totalCost: totalCost * multiplier
+        };
+      };
+
+      const costs = calculateCosts();
+
+      // Save calculation
+      const saveCalculation = () => {
+        const calculation = {
+          id: Date.now(),
+          provider: selectedProvider,
+          model: selectedModel,
+          inputTokens,
+          outputTokens,
+          requests,
+          timeframe,
+          costs: costs,
+          timestamp: new Date().toISOString()
+        };
+
+        const updated = [calculation, ...savedCalculations].slice(0, 20);
+        setSavedCalculations(updated);
+        localStorage.setItem('ai_cost_calculations', JSON.stringify(updated));
+      };
+
+      // Load saved calculation
+      const loadCalculation = (calc) => {
+        setSelectedProvider(calc.provider);
+        setSelectedModel(calc.model);
+        setInputTokens(calc.inputTokens);
+        setOutputTokens(calc.outputTokens);
+        setRequests(calc.requests);
+        setTimeframe(calc.timeframe);
+        setActiveTab('calculator');
+      };
+
+      // Apply usage pattern
+      const applyPattern = (pattern) => {
+        const data = usagePatterns[pattern];
+        setInputTokens(data.input);
+        setOutputTokens(data.output);
+        setRequests(data.requests);
+      };
+
+      // Export calculations
+      const exportCalculations = () => {
+        const data = {
+          calculations: savedCalculations,
+          exported_at: new Date().toISOString(),
+          total_calculations: savedCalculations.length
+        };
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ai_cost_calculations_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      };
+
+      // Tab component
+      const TabButton = ({ active, onClick, children, badge }) => (
+        <button
+          onClick={onClick}
+          className={`relative px-4 py-2 font-medium transition-colors rounded-lg ${
+            active 
+              ? 'bg-primary text-white' 
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+          }`}
+        >
+          {children}
+          {badge && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {badge}
+            </span>
+          )}
+        </button>
+      );
+
+      // Cost breakdown component
+      const CostBreakdown = ({ title, cost, color, percentage }) => (
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</h3>
+            <span className={`text-lg font-bold ${color}`}>
+              ${cost.toFixed(4)}
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div 
+              className={`h-2 rounded-full ${color.replace('text', 'bg')}`}
+              style={{ width: `${percentage}%` }}
+            ></div>
+          </div>
+        </div>
+      );
+
+      return (
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+          {/* Header */}
+          <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                <div className="flex items-center space-x-4">
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    AI Cost Calculator
+                  </h1>
+                  <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
+                    v1.0
+                  </span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <a
+                    href="ai-cost-calculator-tutorial.html"
+                    target="_blank"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    📖 Tutorial
+                  </a>
+                  <a
+                    href="https://intelda.ca"
+                    target="_blank"
+                    className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    🌐 Intelda.ca
+                  </a>
+                  <button
+                    onClick={() => document.documentElement.classList.toggle('dark')}
+                    className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  >
+                    🌙
+                  </button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Navigation Tabs */}
+            <div className="flex space-x-2 mb-6">
+              <TabButton 
+                active={activeTab === 'calculator'} 
+                onClick={() => setActiveTab('calculator')}
+              >
+                Calculator
+              </TabButton>
+              <TabButton 
+                active={activeTab === 'compare'} 
+                onClick={() => setActiveTab('compare')}
+              >
+                Compare Models
+              </TabButton>
+              <TabButton 
+                active={activeTab === 'history'} 
+                onClick={() => setActiveTab('history')}
+                badge={savedCalculations.length > 0 ? savedCalculations.length : null}
+              >
+                History
+              </TabButton>
+            </div>
+
+            {/* Calculator Tab */}
+            {activeTab === 'calculator' && (
+              <>
+                {/* Quick Patterns */}
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Quick Usage Patterns
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                    {Object.keys(usagePatterns).map(pattern => (
+                      <button
+                        key={pattern}
+                        onClick={() => applyPattern(pattern)}
+                        className="p-3 bg-gray-50 dark:bg-gray-900 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+                      >
+                        {pattern}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid lg:grid-cols-3 gap-6">
+                  {/* Input Panel */}
+                  <div className="lg:col-span-2">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                        Calculate AI Costs
+                      </h2>
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* Model Selection */}
+                        <div>
+                          <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+                            AI Provider
+                          </label>
+                          <select
+                            value={selectedProvider}
+                            onChange={(e) => {
+                              setSelectedProvider(e.target.value);
+                              setSelectedModel(Object.keys(modelPricing[e.target.value])[0]);
+                            }}
+                            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            {Object.keys(modelPricing).map(provider => (
+                              <option key={provider} value={provider}>{provider}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+                            Model
+                          </label>
+                          <select
+                            value={selectedModel}
+                            onChange={(e) => setSelectedModel(e.target.value)}
+                            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            {Object.keys(modelPricing[selectedProvider]).map(model => (
+                              <option key={model} value={model}>{model}</option>
+                            ))}
+                          </select>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {modelPricing[selectedProvider][selectedModel]?.description}
+                          </p>
+                        </div>
+
+                        {/* Usage Inputs */}
+                        <div>
+                          <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+                            Input Tokens per Request
+                          </label>
+                          <input
+                            type="number"
+                            value={inputTokens}
+                            onChange={(e) => setInputTokens(parseInt(e.target.value) || 0)}
+                            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                            min="0"
+                          />
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            Prompt length (approx. 4 chars = 1 token)
+                          </p>
+                        </div>
+
+                        <div>
+                          <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+                            Output Tokens per Request
+                          </label>
+                          <input
+                            type="number"
+                            value={outputTokens}
+                            onChange={(e) => setOutputTokens(parseInt(e.target.value) || 0)}
+                            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                            min="0"
+                          />
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            Response length (approx. 4 chars = 1 token)
+                          </p>
+                        </div>
+
+                        <div>
+                          <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+                            Number of Requests
+                          </label>
+                          <input
+                            type="number"
+                            value={requests}
+                            onChange={(e) => setRequests(parseInt(e.target.value) || 0)}
+                            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                            min="0"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+                            Timeframe
+                          </label>
+                          <select
+                            value={timeframe}
+                            onChange={(e) => setTimeframe(e.target.value)}
+                            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            <option value="day">Per Day</option>
+                            <option value="month">Per Month</option>
+                            <option value="year">Per Year</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 flex justify-end">
+                        <button
+                          onClick={saveCalculation}
+                          className="px-4 py-2 bg-primary hover:bg-secondary text-white font-medium rounded-lg transition-colors"
+                        >
+                          Save Calculation
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Results Panel */}
+                  <div className="space-y-6">
+                    {/* Total Cost */}
+                    <div className="bg-gradient-to-r from-primary to-secondary rounded-xl shadow-md p-6 text-white">
+                      <h3 className="text-lg font-semibold mb-2">Total Cost</h3>
+                      <div className="text-3xl font-bold mb-1">
+                        ${costs.totalCost.toFixed(4)}
+                      </div>
+                      <div className="text-sm opacity-90">
+                        {timeframe === 'day' ? 'per day' : timeframe === 'month' ? 'per month' : 'per year'}
+                      </div>
+                    </div>
+
+                    {/* Cost Breakdown */}
+                    <div className="space-y-3">
+                      <CostBreakdown
+                        title="Input Tokens"
+                        cost={costs.inputCost}
+                        color="text-blue-600"
+                        percentage={costs.totalCost > 0 ? (costs.inputCost / costs.totalCost) * 100 : 0}
+                      />
+                      <CostBreakdown
+                        title="Output Tokens"
+                        cost={costs.outputCost}
+                        color="text-purple-600"
+                        percentage={costs.totalCost > 0 ? (costs.outputCost / costs.totalCost) * 100 : 0}
+                      />
+                    </div>
+
+                    {/* Pricing Info */}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Pricing Details</h4>
+                      <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <div>Input: ${modelPricing[selectedProvider][selectedModel]?.input}/1M tokens</div>
+                        <div>Output: ${modelPricing[selectedProvider][selectedModel]?.output}/1M tokens</div>
+                      </div>
+                    </div>
+
+                    {/* Usage Summary */}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Usage Summary</h4>
+                      <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <div>{(inputTokens * requests).toLocaleString()} input tokens</div>
+                        <div>{(outputTokens * requests).toLocaleString()} output tokens</div>
+                        <div>{requests.toLocaleString()} requests</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Compare Models Tab */}
+            {activeTab === 'compare' && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                  Model Pricing Comparison
+                </h2>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-gray-200 dark:border-gray-700">
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Provider</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Model</th>
+                        <th className="text-right py-3 px-4 font-semibold text-gray-900 dark:text-white">Input ($/1M)</th>
+                        <th className="text-right py-3 px-4 font-semibold text-gray-900 dark:text-white">Output ($/1M)</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(modelPricing).map(([provider, models]) =>
+                        Object.entries(models).map(([modelName, pricing]) => (
+                          <tr key={`${provider}-${modelName}`} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900">
+                            <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">{provider}</td>
+                            <td className="py-3 px-4 text-gray-700 dark:text-gray-300">{modelName}</td>
+                            <td className="py-3 px-4 text-right text-gray-700 dark:text-gray-300">${pricing.input.toFixed(2)}</td>
+                            <td className="py-3 px-4 text-right text-gray-700 dark:text-gray-300">${pricing.output.toFixed(2)}</td>
+                            <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{pricing.description}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <p className="text-blue-800 dark:text-blue-200 text-sm">
+                    <strong>Note:</strong> Prices are per 1 million tokens. Input tokens are typically cheaper than output tokens. 
+                    Choose models based on your specific use case and budget requirements.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* History Tab */}
+            {activeTab === 'history' && (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Calculation History
+                  </h2>
+                  <div className="flex space-x-3">
+                    {savedCalculations.length > 0 && (
+                      <>
+                        <button
+                          onClick={exportCalculations}
+                          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                        >
+                          Export History
+                        </button>
+                        <button
+                          onClick={() => {
+                            localStorage.removeItem('ai_cost_calculations');
+                            setSavedCalculations([]);
+                          }}
+                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
+                        >
+                          Clear History
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {savedCalculations.length === 0 ? (
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 text-center">
+                    <p className="text-gray-500 dark:text-gray-400 mb-2">
+                      No saved calculations yet.
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Create a calculation in the Calculator tab to see it here.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {savedCalculations.map(calc => (
+                      <div key={calc.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="font-semibold text-gray-900 dark:text-white">
+                              {calc.provider} - {calc.model}
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {new Date(calc.timestamp).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xl font-bold text-primary">
+                              ${calc.costs.totalCost.toFixed(4)}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              per {calc.timeframe}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded">
+                            <div className="text-sm text-gray-500 dark:text-gray-400">Input Tokens</div>
+                            <div className="font-semibold text-gray-900 dark:text-white">{calc.inputTokens.toLocaleString()}</div>
+                          </div>
+                          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded">
+                            <div className="text-sm text-gray-500 dark:text-gray-400">Output Tokens</div>
+                            <div className="font-semibold text-gray-900 dark:text-white">{calc.outputTokens.toLocaleString()}</div>
+                          </div>
+                          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded">
+                            <div className="text-sm text-gray-500 dark:text-gray-400">Requests</div>
+                            <div className="font-semibold text-gray-900 dark:text-white">{calc.requests.toLocaleString()}</div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end">
+                          <button
+                            onClick={() => loadCalculation(calc)}
+                            className="text-primary hover:text-primary/80 text-sm font-medium"
+                          >
+                            Load Calculation
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <footer className="mt-16 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <div className="flex justify-between items-center">
+                <div className="text-gray-500 dark:text-gray-400">
+                  <p className="mb-2">
+                    Calculate and optimize your AI model costs with precision.
+                  </p>
+                  <p className="text-sm">
+                    Built with ❤️ for AI practitioners • Powered by{' '}
+                    <a href="https://intelda.ca" target="_blank" className="text-primary hover:underline">
+                      Intelda.ca
+                    </a>
+                  </p>
+                </div>
+                <div className="text-right">
+                  <a
+                    href="https://intelda.ca"
+                    target="_blank"
+                    className="inline-flex items-center text-primary hover:text-primary/80 font-medium"
+                  >
+                    Visit Intelda.ca →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+    
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Cost Calculator - Tutorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#10B981',
+            secondary: '#059669',
+          },
+        },
+      },
+    }
+    
+    // Check for dark mode preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+  <style>
+    .step-number {
+      background: linear-gradient(135deg, #10B981, #059669);
+    }
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <!-- Navigation -->
+  <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+            AI Cost Calculator Tutorial
+          </h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="ai-cost-calculator.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+            Try the App
+          </a>
+          <a href="https://intelda.ca" target="_blank" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors">
+            🌐 Intelda.ca
+          </a>
+          <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
+            🌙
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-primary to-secondary text-white py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">
+        Master AI Cost Optimization
+      </h1>
+      <p class="text-xl mb-8 opacity-90">
+        Learn how to calculate, compare, and optimize AI model costs for your projects and business
+      </p>
+      <a href="#getting-started" class="bg-white text-primary px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+        Get Started
+      </a>
+    </div>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Table of Contents</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <a href="#getting-started" class="block text-primary hover:text-primary/80 font-medium">1. Getting Started</a>
+          <a href="#understanding-costs" class="block text-primary hover:text-primary/80 font-medium">2. Understanding AI Costs</a>
+          <a href="#using-calculator" class="block text-primary hover:text-primary/80 font-medium">3. Using the Calculator</a>
+          <a href="#usage-patterns" class="block text-primary hover:text-primary/80 font-medium">4. Usage Patterns</a>
+        </div>
+        <div class="space-y-2">
+          <a href="#comparing-models" class="block text-primary hover:text-primary/80 font-medium">5. Comparing Models</a>
+          <a href="#optimization-strategies" class="block text-primary hover:text-primary/80 font-medium">6. Optimization Strategies</a>
+          <a href="#business-planning" class="block text-primary hover:text-primary/80 font-medium">7. Business Planning</a>
+          <a href="#troubleshooting" class="block text-primary hover:text-primary/80 font-medium">8. Troubleshooting</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tutorial Sections -->
+    
+    <!-- Section 1: Getting Started -->
+    <section id="getting-started" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">1</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Getting Started</h2>
+        </div>
+        
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          The AI Cost Calculator helps you estimate and optimize costs for using various AI models in your projects. 
+          Understanding these costs is crucial for budgeting, pricing, and making informed decisions about AI implementation.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Why Calculate AI Costs?</h3>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">💰</span>
+                Budget planning and cost control
+              </li>
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">📊</span>
+                Compare different models and providers
+              </li>
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">🎯</span>
+                Optimize for cost vs. performance
+              </li>
+              <li class="flex items-center">
+                <span class="text-green-500 mr-2">📈</span>
+                Scale planning and ROI analysis
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">What You'll Learn</h3>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">📚</span>
+                How AI pricing models work
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">🧮</span>
+                Accurate cost calculation methods
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">⚖️</span>
+                Model comparison strategies
+              </li>
+              <li class="flex items-center">
+                <span class="text-blue-500 mr-2">🔧</span>
+                Cost optimization techniques
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-6">
+          <h4 class="font-semibold text-green-800 dark:text-green-200 mb-3">Supported Providers:</h4>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="text-green-700 dark:text-green-300">OpenAI</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-orange-500"></div>
+              <span class="text-green-700 dark:text-green-300">Anthropic</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+              <span class="text-green-700 dark:text-green-300">Google</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+              <span class="text-green-700 dark:text-green-300">Mistral</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+              <span class="text-green-700 dark:text-green-300">Meta</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Understanding Costs -->
+    <section id="understanding-costs" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">2</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Understanding AI Costs</h2>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Token-Based Pricing Model</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-6">
+            Most AI models charge based on tokens - units of text that the model processes. Understanding tokens is crucial for cost estimation.
+          </p>
+          
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">What are Tokens?</h4>
+              <ul class="text-blue-700 dark:text-blue-300 text-sm space-y-1">
+                <li>• Roughly 4 characters = 1 token</li>
+                <li>• One word ≈ 1-2 tokens</li>
+                <li>• Punctuation counts as tokens</li>
+                <li>• Spaces and line breaks count</li>
+              </ul>
+            </div>
+            
+            <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">Input vs Output Tokens</h4>
+              <ul class="text-purple-700 dark:text-purple-300 text-sm space-y-1">
+                <li>• <strong>Input:</strong> Your prompt to the AI</li>
+                <li>• <strong>Output:</strong> AI's response</li>
+                <li>• Output tokens usually cost more</li>
+                <li>• Both are charged separately</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Pricing Examples</h3>
+          <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+            <div class="grid md:grid-cols-3 gap-6">
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Budget Tier</h4>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                  <p><strong>GPT-4o Mini:</strong></p>
+                  <p>Input: $0.15/1M tokens</p>
+                  <p>Output: $0.60/1M tokens</p>
+                  <p class="mt-2 text-green-600 dark:text-green-400">Great for high-volume tasks</p>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Balanced Tier</h4>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                  <p><strong>Claude 3 Sonnet:</strong></p>
+                  <p>Input: $3.00/1M tokens</p>
+                  <p>Output: $15.00/1M tokens</p>
+                  <p class="mt-2 text-blue-600 dark:text-blue-400">Performance vs cost balance</p>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Premium Tier</h4>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                  <p><strong>Claude 3 Opus:</strong></p>
+                  <p>Input: $15.00/1M tokens</p>
+                  <p>Output: $75.00/1M tokens</p>
+                  <p class="mt-2 text-purple-600 dark:text-purple-400">Maximum capability</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 dark:bg-yellow-900/50 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p class="text-yellow-800 dark:text-yellow-200">
+            <strong>Important:</strong> Prices change over time. The calculator uses current pricing, 
+            but always verify with the official provider documentation for the most up-to-date rates.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Using the Calculator -->
+    <section id="using-calculator" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">3</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Using the Calculator</h2>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Step-by-Step Guide</h3>
+          <ol class="space-y-4 text-gray-600 dark:text-gray-300">
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">1.</span>
+              <div>
+                <strong>Select Provider & Model:</strong> Choose from OpenAI, Anthropic, Google, Mistral, or Meta. 
+                Each provider offers different models with varying capabilities and pricing.
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">2.</span>
+              <div>
+                <strong>Input Tokens per Request:</strong> Estimate how many tokens your typical prompt contains. 
+                A simple question might be 50 tokens, while a detailed prompt could be 500+ tokens.
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">3.</span>
+              <div>
+                <strong>Output Tokens per Request:</strong> Estimate the length of responses you expect. 
+                Short answers: 50-200 tokens, detailed responses: 500-2000 tokens.
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">4.</span>
+              <div>
+                <strong>Number of Requests:</strong> How many API calls you'll make in your chosen timeframe.
+              </div>
+            </li>
+            <li class="flex">
+              <span class="font-bold text-primary mr-2">5.</span>
+              <div>
+                <strong>Timeframe:</strong> Calculate costs per day, month, or year based on your planning needs.
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Understanding the Results</h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Cost Breakdown</h4>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between p-2 bg-blue-50 dark:bg-blue-900/30 rounded">
+                  <span>Input Token Cost</span>
+                  <span>Usually lower cost</span>
+                </div>
+                <div class="flex justify-between p-2 bg-purple-50 dark:bg-purple-900/30 rounded">
+                  <span>Output Token Cost</span>
+                  <span>Usually higher cost</span>
+                </div>
+                <div class="flex justify-between p-2 bg-green-50 dark:bg-green-900/30 rounded font-semibold">
+                  <span>Total Cost</span>
+                  <span>Sum of both</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Additional Information</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• <strong>Pricing Details:</strong> Per-million token rates</li>
+                <li>• <strong>Usage Summary:</strong> Total tokens consumed</li>
+                <li>• <strong>Visual Charts:</strong> Cost proportion breakdown</li>
+                <li>• <strong>Save Option:</strong> Store calculations for later</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <p class="text-green-800 dark:text-green-200">
+            <strong>Pro Tip:</strong> Start with conservative estimates and gradually refine based on actual usage. 
+            The calculator saves your calculations so you can track how your estimates compare to reality.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Usage Patterns -->
+    <section id="usage-patterns" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">4</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Usage Patterns</h2>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-8">
+          The calculator includes pre-configured usage patterns for common AI applications. 
+          These patterns provide realistic starting points for your cost calculations.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Content & Communication</h3>
+            <div class="space-y-4">
+              <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+                <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Content Creation</h4>
+                <div class="text-blue-700 dark:text-blue-300 text-sm">
+                  <p>Input: 500 tokens • Output: 1,500 tokens • 200 requests/month</p>
+                  <p class="mt-1">Blog posts, articles, marketing copy</p>
+                </div>
+              </div>
+              
+              <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+                <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">Customer Support</h4>
+                <div class="text-green-700 dark:text-green-300 text-sm">
+                  <p>Input: 200 tokens • Output: 400 tokens • 1,000 requests/month</p>
+                  <p class="mt-1">Chatbots, help desk automation</p>
+                </div>
+              </div>
+              
+              <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+                <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">Translation</h4>
+                <div class="text-purple-700 dark:text-purple-300 text-sm">
+                  <p>Input: 300 tokens • Output: 300 tokens • 500 requests/month</p>
+                  <p class="mt-1">Document translation, localization</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Technical & Analysis</h3>
+            <div class="space-y-4">
+              <div class="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4">
+                <h4 class="font-semibold text-orange-800 dark:text-orange-200 mb-2">Code Generation</h4>
+                <div class="text-orange-700 dark:text-orange-300 text-sm">
+                  <p>Input: 800 tokens • Output: 1,200 tokens • 150 requests/month</p>
+                  <p class="mt-1">Programming assistance, code review</p>
+                </div>
+              </div>
+              
+              <div class="bg-red-50 dark:bg-red-900/30 rounded-lg p-4">
+                <h4 class="font-semibold text-red-800 dark:text-red-200 mb-2">Data Analysis</h4>
+                <div class="text-red-700 dark:text-red-300 text-sm">
+                  <p>Input: 1,500 tokens • Output: 800 tokens • 50 requests/month</p>
+                  <p class="mt-1">Report generation, insights extraction</p>
+                </div>
+              </div>
+              
+              <div class="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4">
+                <h4 class="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Summarization</h4>
+                <div class="text-indigo-700 dark:text-indigo-300 text-sm">
+                  <p>Input: 2,000 tokens • Output: 400 tokens • 100 requests/month</p>
+                  <p class="mt-1">Document summaries, meeting notes</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Customizing Patterns</h3>
+          <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Creating Your Own Pattern:</h4>
+            <ol class="space-y-2 text-gray-600 dark:text-gray-300">
+              <li>1. Start with a similar existing pattern</li>
+              <li>2. Adjust token counts based on your specific use case</li>
+              <li>3. Estimate request volume based on your user base</li>
+              <li>4. Test with small samples to validate estimates</li>
+              <li>5. Save the calculation for future reference</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 dark:bg-blue-900/50 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <p class="text-blue-800 dark:text-blue-200">
+            <strong>Usage Tip:</strong> Click any pattern button to instantly populate the calculator with realistic values. 
+            You can then adjust these numbers to match your specific requirements.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Comparing Models -->
+    <section id="comparing-models" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">5</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Comparing Models</h2>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-8">
+          The "Compare Models" tab provides a comprehensive overview of pricing across all providers and models. 
+          Use this to make informed decisions about which model offers the best value for your use case.
+        </p>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Provider Comparison</h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Budget-Friendly Options</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/30 rounded">
+                  <div>
+                    <div class="font-medium text-green-800 dark:text-green-200">Claude 3 Haiku</div>
+                    <div class="text-xs text-green-600 dark:text-green-400">Anthropic</div>
+                  </div>
+                  <div class="text-right text-green-700 dark:text-green-300 text-sm">
+                    <div>$0.25 / $1.25</div>
+                    <div class="text-xs">per 1M tokens</div>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded">
+                  <div>
+                    <div class="font-medium text-blue-800 dark:text-blue-200">GPT-4o Mini</div>
+                    <div class="text-xs text-blue-600 dark:text-blue-400">OpenAI</div>
+                  </div>
+                  <div class="text-right text-blue-700 dark:text-blue-300 text-sm">
+                    <div>$0.15 / $0.60</div>
+                    <div class="text-xs">per 1M tokens</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Premium Options</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center p-3 bg-purple-50 dark:bg-purple-900/30 rounded">
+                  <div>
+                    <div class="font-medium text-purple-800 dark:text-purple-200">Claude 3 Opus</div>
+                    <div class="text-xs text-purple-600 dark:text-purple-400">Anthropic</div>
+                  </div>
+                  <div class="text-right text-purple-700 dark:text-purple-300 text-sm">
+                    <div>$15.00 / $75.00</div>
+                    <div class="text-xs">per 1M tokens</div>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-orange-50 dark:bg-orange-900/30 rounded">
+                  <div>
+                    <div class="font-medium text-orange-800 dark:text-orange-200">GPT-4 Turbo</div>
+                    <div class="text-xs text-orange-600 dark:text-orange-400">OpenAI</div>
+                  </div>
+                  <div class="text-right text-orange-700 dark:text-orange-300 text-sm">
+                    <div>$10.00 / $30.00</div>
+                    <div class="text-xs">per 1M tokens</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Decision Framework</h3>
+          <div class="grid gap-4">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">For High-Volume Applications</h4>
+              <p class="text-blue-700 dark:text-blue-300 text-sm">
+                Choose budget models like GPT-4o Mini or Claude 3 Haiku. Even small per-token savings multiply significantly at scale.
+              </p>
+            </div>
+            
+            <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">For Complex Tasks</h4>
+              <p class="text-green-700 dark:text-green-300 text-sm">
+                Premium models like Claude 3 Opus or GPT-4o may be worth the cost for tasks requiring advanced reasoning or creativity.
+              </p>
+            </div>
+            
+            <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">For Balanced Needs</h4>
+              <p class="text-purple-700 dark:text-purple-300 text-sm">
+                Mid-tier models like Claude 3 Sonnet or GPT-4o offer good performance at reasonable costs for most applications.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 dark:bg-yellow-900/50 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p class="text-yellow-800 dark:text-yellow-200">
+            <strong>Cost vs Quality Trade-off:</strong> Don't automatically choose the cheapest option. 
+            Consider the total cost including your time for prompt engineering and potential re-work with lower-quality responses.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Optimization Strategies -->
+    <section id="optimization-strategies" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">6</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Optimization Strategies</h2>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Token Optimization</h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Reduce Input Tokens</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Use concise, clear prompts</li>
+                <li>• Remove unnecessary examples</li>
+                <li>• Optimize prompt templates</li>
+                <li>• Use abbreviations where appropriate</li>
+                <li>• Remove redundant instructions</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Manage Output Tokens</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Set max_tokens limits</li>
+                <li>• Request specific formats (bullets, tables)</li>
+                <li>• Ask for concise responses</li>
+                <li>• Use structured outputs</li>
+                <li>• Specify length requirements</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Model Selection Strategies</h3>
+          <div class="space-y-4">
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Tiered Approach</h4>
+              <p class="text-blue-700 dark:text-blue-300 text-sm mb-2">
+                Use different models for different complexity levels:
+              </p>
+              <ul class="text-blue-600 dark:text-blue-400 text-sm space-y-1">
+                <li>• Simple tasks: Budget models (Haiku, GPT-4o Mini)</li>
+                <li>• Medium complexity: Balanced models (Sonnet, GPT-4o)</li>
+                <li>• Complex reasoning: Premium models (Opus, GPT-4 Turbo)</li>
+              </ul>
+            </div>
+            
+            <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">Cascade Strategy</h4>
+              <p class="text-green-700 dark:text-green-300 text-sm">
+                Start with a budget model, and only escalate to premium models when needed. 
+                This can reduce costs by 40-60% while maintaining quality for most requests.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Caching and Batching</h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Response Caching</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Cache frequent queries</li>
+                <li>• Store similar response patterns</li>
+                <li>• Use semantic similarity matching</li>
+                <li>• Implement TTL for cache freshness</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Request Batching</h4>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li>• Combine multiple small requests</li>
+                <li>• Process similar tasks together</li>
+                <li>• Use batch APIs when available</li>
+                <li>• Queue non-urgent requests</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <p class="text-green-800 dark:text-green-200">
+            <strong>Optimization Goal:</strong> Aim for 20-40% cost reduction through these strategies 
+            while maintaining or improving response quality and user experience.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Business Planning -->
+    <section id="business-planning" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">7</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Business Planning</h2>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Budgeting and Forecasting</h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">Cost Planning</h4>
+              <div class="space-y-3">
+                <div class="bg-blue-50 dark:bg-blue-900/30 rounded p-3">
+                  <div class="font-medium text-blue-800 dark:text-blue-200 text-sm">Monthly Budget</div>
+                  <div class="text-blue-600 dark:text-blue-400 text-xs">Start with 3-month projections</div>
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/30 rounded p-3">
+                  <div class="font-medium text-green-800 dark:text-green-200 text-sm">Growth Buffer</div>
+                  <div class="text-green-600 dark:text-green-400 text-xs">Add 25-50% for scale increases</div>
+                </div>
+                <div class="bg-purple-50 dark:bg-purple-900/30 rounded p-3">
+                  <div class="font-medium text-purple-800 dark:text-purple-200 text-sm">Emergency Fund</div>
+                  <div class="text-purple-600 dark:text-purple-400 text-xs">Reserve for unexpected usage spikes</div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-gray-900 dark:text-white mb-3">ROI Calculation</h4>
+              <div class="bg-gray-50 dark:bg-gray-900 rounded p-4">
+                <div class="text-sm space-y-2">
+                  <div><strong>Revenue Impact:</strong> How much value does AI add?</div>
+                  <div><strong>Cost Savings:</strong> What processes does it replace?</div>
+                  <div><strong>Efficiency Gains:</strong> Time saved per task</div>
+                  <div><strong>Quality Improvements:</strong> Error reduction, consistency</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Scaling Considerations</h3>
+          <div class="space-y-4">
+            <div class="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-orange-800 dark:text-orange-200 mb-2">Volume Discounts</h4>
+              <p class="text-orange-700 dark:text-orange-300 text-sm">
+                Many providers offer enterprise pricing for high-volume usage. Contact providers directly 
+                when you reach $1,000+ monthly spend for potential discounts.
+              </p>
+            </div>
+            
+            <div class="bg-red-50 dark:bg-red-900/30 rounded-lg p-4">
+              <h4 class="font-semibold text-red-800 dark:text-red-200 mb-2">Cost Monitoring</h4>
+              <p class="text-red-700 dark:text-red-300 text-sm">
+                Set up billing alerts and usage monitoring. Costs can escalate quickly with viral applications 
+                or unexpected traffic spikes.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Using Calculation History</h3>
+          <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Track and Analyze:</h4>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+              <li>• Save different scenarios for comparison</li>
+              <li>• Export calculations for stakeholder presentations</li>
+              <li>• Monitor actual usage vs. estimates</li>
+              <li>• Adjust projections based on real data</li>
+              <li>• Plan for seasonal variations and growth</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 dark:bg-blue-900/50 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <p class="text-blue-800 dark:text-blue-200">
+            <strong>Business Tip:</strong> Present AI costs as an investment in efficiency and capability, 
+            not just an expense. Include time savings and quality improvements in your ROI calculations.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Troubleshooting -->
+    <section id="troubleshooting" class="mb-16">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="flex items-center mb-6">
+          <div class="step-number w-10 h-10 rounded-full text-white flex items-center justify-center font-bold mr-4">8</div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Troubleshooting</h2>
+        </div>
+
+        <div class="space-y-6">
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Calculator Not Working</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              The calculator shows incorrect results or doesn't update
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Refresh the page and try again</li>
+                <li>• Check that all input fields have valid numbers</li>
+                <li>• Ensure JavaScript is enabled in your browser</li>
+                <li>• Try clearing browser cache and cookies</li>
+                <li>• Use a different browser to isolate the issue</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">History Not Saving</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Calculations aren't being saved or history is empty
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Check if local storage is enabled</li>
+                <li>• Exit private/incognito browsing mode</li>
+                <li>• Ensure you have sufficient storage space</li>
+                <li>• Try the "Save Calculation" button explicitly</li>
+                <li>• Check browser security settings</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Pricing Seems Incorrect</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Calculated costs don't match expected pricing
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Verify token estimates are realistic</li>
+                <li>• Check input vs output token distinction</li>
+                <li>• Compare with official provider pricing</li>
+                <li>• Remember prices are per 1 million tokens</li>
+                <li>• Account for both input and output costs</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Export Not Working</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-3">
+              Cannot export calculation history or data
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 rounded p-3">
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                <strong>Solutions:</strong>
+              </p>
+              <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                <li>• Check if downloads are blocked in browser</li>
+                <li>• Ensure popup blockers aren't interfering</li>
+                <li>• Try right-clicking the export button</li>
+                <li>• Check your downloads folder</li>
+                <li>• Verify you have saved calculations to export</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-green-800 dark:text-green-200 mb-3">Still Need Help?</h3>
+          <div class="space-y-3 text-green-700 dark:text-green-300">
+            <p>
+              <strong>Double-check Your Estimates:</strong> Use the provider's documentation to verify token counts and pricing.
+            </p>
+            <p>
+              <strong>Test with Small Batches:</strong> Validate your calculations with actual API usage before scaling.
+            </p>
+            <p>
+              <strong>Browser Compatibility:</strong> The calculator works best in modern browsers with JavaScript enabled.
+            </p>
+            <p>
+              <strong>Contact Support:</strong> Visit{' '}
+              <a href="https://intelda.ca" target="_blank" class="underline hover:no-underline">
+                Intelda.ca
+              </a>{' '}
+              for additional assistance and enterprise solutions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 dark:text-gray-400">
+      <p className="mb-2">
+        &copy; 2025 AI Cost Calculator Tutorial. Built for smart AI practitioners.
+      </p>
+      <p className="text-sm">
+        Powered by{' '}
+        <a href="https://intelda.ca" target="_blank" className="text-primary hover:underline">
+          Intelda.ca
+        </a>{' '}
+        • Calculate smarter, spend wiser
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add active section highlighting to table of contents
+    const sections = document.querySelectorAll('section[id]');
+    const tocLinks = document.querySelectorAll('a[href^="#"]');
+
+    function highlightCurrentSection() {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('font-bold');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('font-bold');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightCurrentSection);
+  </script>
+</body>
+</html>
